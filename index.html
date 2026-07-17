@@ -148,54 +148,45 @@
       <!-- SEARCH overlay -->
       <sc-if value="{{ ovSearch }}" hint-placeholder-val="{{ false }}">
         <div style="position:absolute;left:0;right:0;top:0;bottom:0;z-index:9;background:#f7f6f2;display:flex;flex-direction:column;animation:fadeIn .2s ease;max-width:560px;margin-inline:auto">
-          <div style="padding:15px 16px 12px;display:flex;gap:10px;align-items:center;border-bottom:1px solid rgba(32,36,31,.07)">
-            <div style="flex:1;background:#fff;border:1px solid rgba(32,36,31,.12);border-radius:14px;padding:11px 13px;display:flex;align-items:center;gap:9px"><span style="width:14px;height:14px;border:2px solid #8a8d84;border-radius:50%;flex:none"></span><input value="{{ searchText }}" onInput="{{ onSearch }}" placeholder="Species or place…" style="border:none;outline:none;background:none;font:500 15px 'Hanken Grotesk';color:#20241f;width:100%" /></div>
-            <span onClick="{{ closeOverlay }}" style="font:500 14px 'Hanken Grotesk';color:#4f7a52;cursor:pointer">Cancel</span>
+          <div style="padding:14px 16px 12px;border-bottom:1px solid rgba(32,36,31,.07)">
+            <div style="display:flex;justify-content:flex-end;margin-bottom:8px"><span onClick="{{ closeOverlay }}" style="font:500 14px 'Hanken Grotesk';color:#4f7a52;cursor:pointer">{{ uiCancel }}</span></div>
+            <div style="display:flex;gap:8px;align-items:stretch">
+              <div style="flex:1;min-width:0;background:#fff;border:1px solid {{ speciesBarBc }};border-radius:14px;padding:10px 12px;display:flex;align-items:center;gap:8px"><span style="width:13px;height:13px;border:2px solid #8a8d84;border-radius:50%;flex:none"></span><input value="{{ speciesQ }}" onInput="{{ onSpeciesInput }}" onFocus="{{ focusSpecies }}" placeholder="{{ uiSpeciesPh }}" style="border:none;outline:none;background:none;font:500 14px 'Hanken Grotesk';color:#20241f;width:100%;min-width:0" /></div>
+              <div style="flex:1;min-width:0;background:#fff;border:1px solid {{ placeBarBc }};border-radius:14px;padding:10px 12px;display:flex;align-items:center;gap:8px"><span style="width:11px;height:11px;border:2px solid #8a8d84;transform:rotate(45deg);flex:none"></span><input value="{{ placeQ }}" onInput="{{ onPlaceInput }}" onFocus="{{ focusPlace }}" placeholder="{{ uiPlacePh }}" style="border:none;outline:none;background:none;font:500 14px 'Hanken Grotesk';color:#20241f;width:100%;min-width:0" /></div>
+            </div>
           </div>
           <div style="overflow-y:auto;flex:1;padding:6px 0 20px">
-            <div style="padding:14px 20px 6px;display:flex;align-items:center;justify-content:space-between;font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;color:#a8a59c">
-              <span>SPECIES</span>
-              <sc-if value="{{ speciesSearching }}" hint-placeholder-val="{{ false }}"><span style="color:#c9862f;letter-spacing:0">searching…</span></sc-if>
-            </div>
-            <sc-for list="{{ searchSpecies }}" as="s" hint-placeholder-count="4">
-              <div onClick="{{ s.confirm }}" style="display:flex;gap:12px;align-items:center;padding:10px 20px;cursor:pointer">
-                <div style="width:40px;height:40px;border-radius:11px;flex:none;background:repeating-linear-gradient(135deg,#e6e4dc,#e6e4dc 6px,#f0efe9 6px,#f0efe9 12px)"></div>
-                <div><div style="font:500 15px 'Newsreader',serif;color:#20241f">{{ s.common }}</div><div style="font:italic 400 12.5px 'Newsreader',serif;color:#8a8d84">{{ s.sci }}</div></div>
+            <sc-if value="{{ searchModeSpecies }}" hint-placeholder-val="{{ true }}">
+              <div style="padding:14px 20px 6px;display:flex;align-items:center;justify-content:space-between;font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;color:#a8a59c">
+                <span>{{ uiSecSpecies }}</span>
+                <sc-if value="{{ speciesSearching }}" hint-placeholder-val="{{ false }}"><span style="color:#c9862f;letter-spacing:0">{{ uiSearching }}</span></sc-if>
               </div>
-            </sc-for>
-            <div style="padding:16px 20px 6px;display:flex;align-items:center;justify-content:space-between;font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;color:#a8a59c">
-              <span>PLACES</span>
-              <sc-if value="{{ placeSearching }}" hint-placeholder-val="{{ false }}"><span style="color:#c9862f;letter-spacing:0">searching…</span></sc-if>
-            </div>
-            <sc-for list="{{ searchPlaces }}" as="p" hint-placeholder-count="3">
-              <div onClick="{{ p.pick }}" style="display:flex;gap:12px;align-items:center;padding:11px 20px;cursor:pointer">
-                <span style="width:9px;height:9px;border:2px solid #8a8d84;transform:rotate(45deg);flex:none;margin-top:1px"></span>
-                <div style="min-width:0;flex:1">
-                  <div style="font:500 14.5px 'Hanken Grotesk';color:#42463f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.name }}</div>
-                  <sc-if value="{{ p.hasSub }}" hint-placeholder-val="{{ false }}"><div style="font:400 12px 'Hanken Grotesk';color:#a8a59c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.sub }}</div></sc-if>
+              <sc-for list="{{ searchSpecies }}" as="s" hint-placeholder-count="4">
+                <div onClick="{{ s.confirm }}" style="display:flex;gap:12px;align-items:center;padding:10px 20px;cursor:pointer">
+                  <div style="width:40px;height:40px;border-radius:11px;flex:none;overflow:hidden;background:repeating-linear-gradient(135deg,#e6e4dc,#e6e4dc 6px,#f0efe9 6px,#f0efe9 12px)">{{ s.thumb }}</div>
+                  <div><div style="font:500 15px 'Newsreader',serif;color:#20241f">{{ s.common }}</div><div style="font:italic 400 12.5px 'Newsreader',serif;color:#8a8d84">{{ s.sci }}</div></div>
                 </div>
+              </sc-for>
+            </sc-if>
+            <sc-if value="{{ searchModePlace }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:14px 20px 6px;display:flex;align-items:center;justify-content:space-between;font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;color:#a8a59c">
+                <span>{{ uiSecPlaces }}</span>
+                <sc-if value="{{ placeSearching }}" hint-placeholder-val="{{ false }}"><span style="color:#c9862f;letter-spacing:0">{{ uiSearching }}</span></sc-if>
               </div>
-            </sc-for>
-            <sc-if value="{{ showNoPlaces }}" hint-placeholder-val="{{ false }}">
-              <div style="padding:6px 20px 4px;font:400 13px 'Hanken Grotesk';color:#a8a59c">No places found</div>
+              <sc-for list="{{ searchPlaces }}" as="p" hint-placeholder-count="3">
+                <div onClick="{{ p.pick }}" style="display:flex;gap:12px;align-items:center;padding:11px 20px;cursor:pointer">
+                  <span style="width:9px;height:9px;border:2px solid #8a8d84;transform:rotate(45deg);flex:none;margin-top:1px"></span>
+                  <div style="min-width:0;flex:1">
+                    <div style="font:500 14.5px 'Hanken Grotesk';color:#42463f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.name }}</div>
+                    <sc-if value="{{ p.hasSub }}" hint-placeholder-val="{{ false }}"><div style="font:400 12px 'Hanken Grotesk';color:#a8a59c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.sub }}</div></sc-if>
+                  </div>
+                </div>
+              </sc-for>
+              <sc-if value="{{ showNoPlaces }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:6px 20px 4px;font:400 13px 'Hanken Grotesk';color:#a8a59c">{{ uiNoPlaces }}</div>
+              </sc-if>
             </sc-if>
           </div>
-        </div>
-      </sc-if>
-
-      <!-- CONFIRM (species picked from search) overlay -->
-      <sc-if value="{{ ovConfirm }}" hint-placeholder-val="{{ false }}">
-        <div style="position:absolute;left:0;right:0;bottom:0;z-index:9;background:#f7f6f2;border-radius:24px 24px 0 0;padding:8px 0 24px;animation:slideUp .26s cubic-bezier(.2,.8,.2,1);max-width:560px;margin-inline:auto">
-          <div style="width:40px;height:4px;border-radius:2px;background:#d5d2c9;margin:6px auto 16px"></div>
-          <div style="padding:0 22px;display:flex;gap:14px;align-items:center">
-            <div style="width:56px;height:56px;border-radius:15px;flex:none;background:repeating-linear-gradient(135deg,#e6e4dc,#e6e4dc 6px,#f0efe9 6px,#f0efe9 12px)"></div>
-            <div><div style="font:500 21px 'Newsreader',serif;color:#20241f;line-height:1.1">{{ pending.common }}</div><div style="font:italic 400 13.5px 'Newsreader',serif;color:#8a8d84">{{ pending.sci }}</div></div>
-          </div>
-          <div style="padding:18px 20px 0;display:flex;flex-direction:column;gap:10px">
-            <div onClick="{{ confirmInfo }}" style="background:#20241f;color:#fff;border-radius:16px;padding:15px;text-align:center;font:600 14.5px 'Hanken Grotesk';cursor:pointer">Open species info</div>
-            <div onClick="{{ confirmPlace }}" style="background:#fff;border:1px solid rgba(32,36,31,.14);color:#20241f;border-radius:16px;padding:15px;text-align:center;font:600 14.5px 'Hanken Grotesk';cursor:pointer">Add a place to explore</div>
-          </div>
-          <div style="padding:13px 26px 0;text-align:center;font:400 12px/1.5 'Hanken Grotesk';color:#9a9d94">…or just keep it as your subject and set date &amp; time on the map</div>
         </div>
       </sc-if>
 
@@ -209,7 +200,8 @@
             <div onClick="{{ pickRect }}" style="flex:1;background:#fff;border:1px solid rgba(32,36,31,.1);border-radius:16px;padding:14px 8px;text-align:center;cursor:pointer"><div style="width:20px;height:15px;border:2px solid #8a8d84;border-radius:2px;margin:3px auto 9px"></div><div style="font:600 12px 'Hanken Grotesk';color:#42463f">{{ areaL.rect }}</div></div>
             <div onClick="{{ pickPin }}" style="flex:1;background:#fff;border:1px solid rgba(32,36,31,.1);border-radius:16px;padding:14px 8px;text-align:center;cursor:pointer"><div style="width:16px;height:16px;border-radius:50%;background:#8a8d84;margin:2px auto 10px"></div><div style="font:600 12px 'Hanken Grotesk';color:#42463f">{{ areaL.pin }}</div></div>
           </div>
-          <div onClick="{{ pickAnywhere }}" style="margin:20px 22px 0;text-align:center;font:600 14px 'Hanken Grotesk';color:#4f7a52;cursor:pointer">{{ areaL.anywhere }}</div>
+          <div onClick="{{ useScreen }}" style="margin:12px 16px 0;background:#fff;border:1px solid rgba(32,36,31,.12);border-radius:14px;padding:13px 14px;display:flex;align-items:center;gap:10px;cursor:pointer"><span style="width:16px;height:12px;border:2px solid #4f7a52;border-radius:3px;flex:none"></span><span style="font:600 13.5px 'Hanken Grotesk';color:#2f4d31">{{ uiScreenArea }}</span></div>
+          <div onClick="{{ pickAnywhere }}" style="margin:14px 22px 0;text-align:center;font:600 14px 'Hanken Grotesk';color:#4f7a52;cursor:pointer">{{ areaL.anywhere }}</div>
         </div>
       </sc-if>
 
@@ -290,9 +282,9 @@
             <div id="se-obsmap" style="position:absolute;inset:0"></div>
           </sc-if>
           <sc-if value="{{ detail.noObsMap }}" hint-placeholder-val="{{ false }}">
-            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:500 12px 'Hanken Grotesk';color:#a8a59c">No observation map for this species</div>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:500 12px 'Hanken Grotesk';color:#a8a59c">{{ uiNoObsMap }}</div>
           </sc-if>
-          <span style="position:absolute;left:12px;bottom:10px;z-index:1000;font:600 10px 'IBM Plex Mono',monospace;color:#3f4a38;background:rgba(255,255,255,.85);padding:3px 7px;border-radius:6px;pointer-events:none">observations · {{ detail.areaShort }}</span>
+          <span style="position:absolute;left:12px;bottom:10px;z-index:1000;font:600 10px 'IBM Plex Mono',monospace;color:#3f4a38;background:rgba(255,255,255,.85);padding:3px 7px;border-radius:6px;pointer-events:none">{{ uiObservations }} · {{ detail.areaShort }}</span>
         </div>
 
         <!-- seasonality -->
@@ -437,7 +429,7 @@ class Component extends DCLogic {
   // (removed) no demo/sample species: the app shows only live iNaturalist + GBIF data
 
   state = {
-    view:'home', overlay:null, selId:null, pendingId:null, searchText:'', subjectType:null, subjectGroup:null, subjectSpecies:null,
+    view:'home', overlay:null, selId:null, pendingId:null, searchText:'', speciesQ:'', placeQ:'', searchMode:'species', subjectType:null, subjectGroup:null, subjectSpecies:null,
     sheetH:428, sheetDragging:false, groupsExpanded:false,
     bbox:{swlat:41.80, swlng:12.35, nelat:41.99, nelng:12.62},
     live:{status:'idle', rows:[], total:0}, openSpecies:null, online:true,
@@ -459,8 +451,8 @@ class Component extends DCLogic {
     {code:'ar', label:'العربية'},
   ];
   TR = {
-    en:{search:'Search a species or place…',anyGroup:'Any group',anySpecies:'Any species',anyArea:'Any area',anyDate:'Any date',anyTime:'Any time',species:'species',sort:'Sort',sort_count:'Most observed',sort_name:'A–Z',topN:'Top {n} shown',noSpecies:'No species found in this area',g_amph:'Amphibians',g_bird:'Birds',g_mamm:'Mammals',g_rept:'Reptiles',g_ins:'Insects',g_arac:'Arachnids',g_fish:'Fish',g_plant:'Plants',when:'When',timeOfDay:'Time of day',customRange:'CUSTOM RANGE',quickRanges:'QUICK RANGES',byMonth:'OR BY MONTH · ANY YEAR',apply:'Apply',tw_week:'This week',tw_month:'This month',tw_spring:'Spring',tw_summer:'Summer',settings:'Settings',mode:'MODE',language:'LANGUAGE',simple:'Simple',expert:'Expert',simpleDesc:'Just the species present here, with an info card for each.',expertDesc:'Date & time filters, effort-corrected activity, and multi-source evidence.',accentColor:'ACCENT COLOR',done:'Done',startTitle:'What are you looking for?',startSub:'Choose how much detail you want. You can change this anytime in Settings.',startSimpleDesc:'See which species are present in an area, each with a clear info card. No filters, no statistics.',startExpertDesc:'Filter by date & time of day, see effort-corrected reporting activity and deduplicated evidence across iNaturalist + GBIF.',dontAsk:"Don't ask me again",reporting:'REPORTING ACTIVITY · MONTH',bestTime:'BEST TIME',notEstablished:'Not established',noActivity:'No verified activity-pattern source for this species.',evidence:'EVIDENCE · SOURCES',combined:'Combined',dedup:'deduplicated',exclInat:'excl. iNat',seeAll:'See all species in',showingFor:'Showing for',ev_present:'present',ev_confirmed:'Confirmed in area',ev_presentNo:'Present · no recent records',reports:'reports',viewInat:'View on iNaturalist ↗',notEnough:'Not enough records to show a reliable pattern'},
-    it:{search:'Cerca una specie o un luogo…',anyGroup:'Tutti i gruppi',anySpecies:'Tutte le specie',anyArea:'Qualsiasi area',anyDate:'Qualsiasi data',anyTime:'Qualsiasi ora',species:'specie',sort:'Ordina',sort_count:'Più osservate',sort_name:'A–Z',topN:'Prime {n} mostrate',noSpecies:'Nessuna specie trovata in questa area',g_amph:'Anfibi',g_bird:'Uccelli',g_mamm:'Mammiferi',g_rept:'Rettili',g_ins:'Insetti',g_arac:'Aracnidi',g_fish:'Pesci',g_plant:'Piante',when:'Quando',timeOfDay:'Ora del giorno',customRange:'INTERVALLO PERSONALIZZATO',quickRanges:'INTERVALLI RAPIDI',byMonth:'O PER MESE · QUALSIASI ANNO',apply:'Applica',tw_week:'Questa settimana',tw_month:'Questo mese',tw_spring:'Primavera',tw_summer:'Estate',settings:'Impostazioni',mode:'MODALITÀ',language:'LINGUA',simple:'Semplice',expert:'Esperto',simpleDesc:'Solo le specie presenti qui, con una scheda per ciascuna.',expertDesc:'Filtri data e ora, attività corretta per sforzo ed evidenza multi-fonte.',accentColor:'COLORE ACCENTO',done:'Fatto',startTitle:'Cosa stai cercando?',startSub:'Scegli quanto dettaglio vuoi. Puoi cambiarlo quando vuoi nelle Impostazioni.',startSimpleDesc:'Vedi quali specie sono presenti in un\'area, ciascuna con una scheda chiara. Niente filtri, niente statistiche.',startExpertDesc:'Filtra per data e ora del giorno, vedi l\'attività corretta per sforzo ed evidenza deduplicata tra iNaturalist + GBIF.',dontAsk:'Non chiedermelo più',reporting:'ATTIVITÀ DI SEGNALAZIONE · MESE',bestTime:'ORARIO MIGLIORE',notEstablished:'Non stabilito',noActivity:'Nessuna fonte verificata sul ritmo di attività per questa specie.',evidence:'EVIDENZA · FONTI',combined:'Combinato',dedup:'deduplicato',exclInat:'escl. iNat',seeAll:'Vedi tutte le specie in',showingFor:'Risultati per',ev_present:'presente',ev_confirmed:'Confermata nell\'area',ev_presentNo:'Presente · nessuna segnalazione recente',reports:'segnalazioni',viewInat:'Apri su iNaturalist ↗',notEnough:'Dati insufficienti per mostrare un andamento affidabile'},
+    en:{search:'Search a species or place…',anyGroup:'Any group',anySpecies:'Any species',anyArea:'Any area',anyDate:'Any date',anyTime:'Any time',species:'species',sort:'Sort',sort_count:'Most observed',sort_name:'A–Z',topN:'Top {n} shown',noSpecies:'No species found in this area',cancel:'Cancel',searching:'Searching…',sec_species:'SPECIES',sec_places:'PLACES',noPlaces:'No places found',searchSpeciesPh:'Search a species…',searchPlacePh:'Search a place…',more:'More',less:'Less',noObsMap:'No observation map for this species',observations:'observations',drawnArea:'Drawn area',boxArea:'Box area',pinArea:'Pin',screenArea:'Visible map area',thisRegion:'this region',hintPin:'Tap the map to drop a pin',hintPinSet:'Set the radius, then confirm',hintRectStart:'Tap one corner of the box',hintRectEnd:'Tap the opposite corner',hintDrawStart:'Tap the map to add points',hintDrawMore:'Tap to add points',placed:'placed',finishArea:'Finish area',addMore:'Add {n} more',undo:'Undo',useThisArea:'Use this area',tapMap:'Tap the map',g_amph:'Amphibians',g_bird:'Birds',g_mamm:'Mammals',g_rept:'Reptiles',g_ins:'Insects',g_arac:'Arachnids',g_fish:'Fish',g_plant:'Plants',when:'When',timeOfDay:'Time of day',customRange:'CUSTOM RANGE',quickRanges:'QUICK RANGES',byMonth:'OR BY MONTH · ANY YEAR',apply:'Apply',tw_week:'This week',tw_month:'This month',tw_spring:'Spring',tw_summer:'Summer',settings:'Settings',mode:'MODE',language:'LANGUAGE',simple:'Simple',expert:'Expert',simpleDesc:'Just the species present here, with an info card for each.',expertDesc:'Date & time filters, effort-corrected activity, and multi-source evidence.',accentColor:'ACCENT COLOR',done:'Done',startTitle:'What are you looking for?',startSub:'Choose how much detail you want. You can change this anytime in Settings.',startSimpleDesc:'See which species are present in an area, each with a clear info card. No filters, no statistics.',startExpertDesc:'Filter by date & time of day, see effort-corrected reporting activity and deduplicated evidence across iNaturalist + GBIF.',dontAsk:"Don't ask me again",reporting:'REPORTING ACTIVITY · MONTH',bestTime:'BEST TIME',notEstablished:'Not established',noActivity:'No verified activity-pattern source for this species.',evidence:'EVIDENCE · SOURCES',combined:'Combined',dedup:'deduplicated',exclInat:'excl. iNat',seeAll:'See all species in',showingFor:'Showing for',ev_present:'present',ev_confirmed:'Confirmed in area',ev_presentNo:'Present · no recent records',reports:'reports',viewInat:'View on iNaturalist ↗',notEnough:'Not enough records to show a reliable pattern'},
+    it:{search:'Cerca una specie o un luogo…',anyGroup:'Tutti i gruppi',anySpecies:'Tutte le specie',anyArea:'Qualsiasi area',anyDate:'Qualsiasi data',anyTime:'Qualsiasi ora',species:'specie',sort:'Ordina',sort_count:'Più osservate',sort_name:'A–Z',topN:'Prime {n} mostrate',noSpecies:'Nessuna specie trovata in questa area',cancel:'Annulla',searching:'Ricerca…',sec_species:'SPECIE',sec_places:'LUOGHI',noPlaces:'Nessun luogo trovato',searchSpeciesPh:'Cerca una specie…',searchPlacePh:'Cerca un luogo…',more:'Altro',less:'Meno',noObsMap:'Nessuna mappa di osservazioni per questa specie',observations:'osservazioni',drawnArea:'Area disegnata',boxArea:'Rettangolo',pinArea:'Punto',screenArea:'Area visibile sulla mappa',thisRegion:'questa zona',hintPin:'Tocca la mappa per posizionare un punto',hintPinSet:'Imposta il raggio, poi conferma',hintRectStart:'Tocca un angolo del rettangolo',hintRectEnd:"Tocca l'angolo opposto",hintDrawStart:'Tocca la mappa per aggiungere punti',hintDrawMore:'Tocca per aggiungere punti',placed:'posizionati',finishArea:'Completa area',addMore:'Aggiungi altri {n}',undo:'Annulla',useThisArea:"Usa quest'area",tapMap:'Tocca la mappa',g_amph:'Anfibi',g_bird:'Uccelli',g_mamm:'Mammiferi',g_rept:'Rettili',g_ins:'Insetti',g_arac:'Aracnidi',g_fish:'Pesci',g_plant:'Piante',when:'Quando',timeOfDay:'Ora del giorno',customRange:'INTERVALLO PERSONALIZZATO',quickRanges:'INTERVALLI RAPIDI',byMonth:'O PER MESE · QUALSIASI ANNO',apply:'Applica',tw_week:'Questa settimana',tw_month:'Questo mese',tw_spring:'Primavera',tw_summer:'Estate',settings:'Impostazioni',mode:'MODALITÀ',language:'LINGUA',simple:'Semplice',expert:'Esperto',simpleDesc:'Solo le specie presenti qui, con una scheda per ciascuna.',expertDesc:'Filtri data e ora, attività corretta per sforzo ed evidenza multi-fonte.',accentColor:'COLORE ACCENTO',done:'Fatto',startTitle:'Cosa stai cercando?',startSub:'Scegli quanto dettaglio vuoi. Puoi cambiarlo quando vuoi nelle Impostazioni.',startSimpleDesc:'Vedi quali specie sono presenti in un\'area, ciascuna con una scheda chiara. Niente filtri, niente statistiche.',startExpertDesc:'Filtra per data e ora del giorno, vedi l\'attività corretta per sforzo ed evidenza deduplicata tra iNaturalist + GBIF.',dontAsk:'Non chiedermelo più',reporting:'ATTIVITÀ DI SEGNALAZIONE · MESE',bestTime:'ORARIO MIGLIORE',notEstablished:'Non stabilito',noActivity:'Nessuna fonte verificata sul ritmo di attività per questa specie.',evidence:'EVIDENZA · FONTI',combined:'Combinato',dedup:'deduplicato',exclInat:'escl. iNat',seeAll:'Vedi tutte le specie in',showingFor:'Risultati per',ev_present:'presente',ev_confirmed:'Confermata nell\'area',ev_presentNo:'Presente · nessuna segnalazione recente',reports:'segnalazioni',viewInat:'Apri su iNaturalist ↗',notEnough:'Dati insufficienti per mostrare un andamento affidabile'},
     es:{search:'Busca una especie o lugar…',anyGroup:'Cualquier grupo',anySpecies:'Cualquier especie',anyArea:'Cualquier área',anyDate:'Cualquier fecha',anyTime:'Cualquier hora',species:'especies',sort:'Ordenar',g_amph:'Anfibios',g_bird:'Aves',g_mamm:'Mamíferos',g_rept:'Reptiles',g_ins:'Insectos',g_arac:'Arácnidos',g_fish:'Peces',g_plant:'Plantas',when:'Cuándo',timeOfDay:'Hora del día',customRange:'RANGO PERSONALIZADO',quickRanges:'RANGOS RÁPIDOS',byMonth:'O POR MES · CUALQUIER AÑO',apply:'Aplicar',tw_week:'Esta semana',tw_month:'Este mes',tw_spring:'Primavera',tw_summer:'Verano',settings:'Ajustes',mode:'MODO',language:'IDIOMA',simple:'Simple',expert:'Experto',simpleDesc:'Solo las especies presentes aquí, con una ficha para cada una.',expertDesc:'Filtros de fecha y hora, actividad corregida por esfuerzo y evidencia multifuente.',accentColor:'COLOR DE ACENTO',done:'Listo',startTitle:'¿Qué estás buscando?',startSub:'Elige cuánto detalle quieres. Puedes cambiarlo cuando quieras en Ajustes.',startSimpleDesc:'Ve qué especies están presentes en un área, cada una con una ficha clara. Sin filtros ni estadísticas.',startExpertDesc:'Filtra por fecha y hora del día, ve la actividad corregida por esfuerzo y evidencia deduplicada entre iNaturalist + GBIF.',dontAsk:'No volver a preguntar',reporting:'ACTIVIDAD DE REGISTRO · MES',bestTime:'MEJOR HORA',notEstablished:'No establecido',noActivity:'No hay fuente verificada del patrón de actividad para esta especie.',evidence:'EVIDENCIA · FUENTES',combined:'Combinado',dedup:'deduplicado',exclInat:'excl. iNat',seeAll:'Ver todas las especies en',showingFor:'Mostrando para',ev_present:'presente',ev_confirmed:'Confirmada en el área',ev_presentNo:'Presente · sin registros recientes',reports:'registros',viewInat:'Ver en iNaturalist ↗',notEnough:'Datos insuficientes para mostrar un patrón fiable'},
     fr:{search:'Rechercher une espèce ou un lieu…',anyGroup:'Tous les groupes',anySpecies:'Toutes les espèces',anyArea:'Toute zone',anyDate:'Toute date',anyTime:'Toute heure',species:'espèces',sort:'Trier',g_amph:'Amphibiens',g_bird:'Oiseaux',g_mamm:'Mammifères',g_rept:'Reptiles',g_ins:'Insectes',g_arac:'Arachnides',g_fish:'Poissons',g_plant:'Plantes',when:'Quand',timeOfDay:'Heure du jour',customRange:'PLAGE PERSONNALISÉE',quickRanges:'PLAGES RAPIDES',byMonth:'OU PAR MOIS · TOUTE ANNÉE',apply:'Appliquer',tw_week:'Cette semaine',tw_month:'Ce mois',tw_spring:'Printemps',tw_summer:'Été',settings:'Réglages',mode:'MODE',language:'LANGUE',simple:'Simple',expert:'Expert',simpleDesc:'Seulement les espèces présentes ici, avec une fiche pour chacune.',expertDesc:'Filtres date et heure, activité corrigée de l\'effort et preuves multi-sources.',accentColor:'COULEUR D\'ACCENT',done:'Terminé',startTitle:'Que cherchez-vous ?',startSub:'Choisissez le niveau de détail. Vous pouvez le changer à tout moment dans les Réglages.',startSimpleDesc:'Voyez quelles espèces sont présentes dans une zone, chacune avec une fiche claire. Sans filtres ni statistiques.',startExpertDesc:'Filtrez par date et heure, voyez l\'activité corrigée de l\'effort et les preuves dédupliquées entre iNaturalist + GBIF.',dontAsk:'Ne plus demander',reporting:'ACTIVITÉ DE SIGNALEMENT · MOIS',bestTime:'MEILLEUR MOMENT',notEstablished:'Non établi',noActivity:'Aucune source vérifiée du rythme d\'activité pour cette espèce.',evidence:'PREUVES · SOURCES',combined:'Combiné',dedup:'dédupliqué',exclInat:'hors iNat',seeAll:'Voir toutes les espèces à',showingFor:'Résultats pour',ev_present:'présente',ev_confirmed:'Confirmée dans la zone',ev_presentNo:'Présente · aucun signalement récent',reports:'signalements',viewInat:'Voir sur iNaturalist ↗',notEnough:'Données insuffisantes pour un motif fiable'},
     de:{search:'Art oder Ort suchen…',anyGroup:'Alle Gruppen',anySpecies:'Alle Arten',anyArea:'Beliebiges Gebiet',anyDate:'Beliebiges Datum',anyTime:'Beliebige Zeit',species:'Arten',sort:'Sortieren',g_amph:'Amphibien',g_bird:'Vögel',g_mamm:'Säugetiere',g_rept:'Reptilien',g_ins:'Insekten',g_arac:'Spinnentiere',g_fish:'Fische',g_plant:'Pflanzen',when:'Wann',timeOfDay:'Tageszeit',customRange:'BENUTZERDEFINIERT',quickRanges:'SCHNELLBEREICHE',byMonth:'ODER NACH MONAT · JEDES JAHR',apply:'Anwenden',tw_week:'Diese Woche',tw_month:'Dieser Monat',tw_spring:'Frühling',tw_summer:'Sommer',settings:'Einstellungen',mode:'MODUS',language:'SPRACHE',simple:'Einfach',expert:'Experte',simpleDesc:'Nur die hier vorkommenden Arten, jeweils mit Infokarte.',expertDesc:'Datums- und Zeitfilter, aufwandskorrigierte Aktivität und Belege aus mehreren Quellen.',accentColor:'AKZENTFARBE',done:'Fertig',startTitle:'Wonach suchst du?',startSub:'Wähle, wie viel Detail du möchtest. Du kannst es jederzeit in den Einstellungen ändern.',startSimpleDesc:'Sieh, welche Arten in einem Gebiet vorkommen, jede mit einer klaren Infokarte. Keine Filter, keine Statistik.',startExpertDesc:'Filtere nach Datum & Tageszeit, sieh aufwandskorrigierte Meldeaktivität und entduplizierte Belege aus iNaturalist + GBIF.',dontAsk:'Nicht mehr fragen',reporting:'MELDEAKTIVITÄT · MONAT',bestTime:'BESTE ZEIT',notEstablished:'Nicht belegt',noActivity:'Keine verifizierte Quelle zum Aktivitätsmuster dieser Art.',evidence:'BELEGE · QUELLEN',combined:'Kombiniert',dedup:'entdupliziert',exclInat:'ohne iNat',seeAll:'Alle Arten anzeigen in',showingFor:'Angezeigt für',ev_present:'vorhanden',ev_confirmed:'Im Gebiet bestätigt',ev_presentNo:'Vorhanden · keine aktuellen Meldungen',reports:'Meldungen',viewInat:'Auf iNaturalist ansehen ↗',notEnough:'Zu wenige Daten für ein verlässliches Muster'},
@@ -545,8 +537,8 @@ class Component extends DCLogic {
     ar:{chooseArea:'اختر منطقة',draw:'ارسم',pin:'نقطة + نطاق',saved:'المناطق المحفوظة',anywhere:'أي مكان'},
   };
   RES = {
-    en:{live:'LIVE · iNAT',loading:'LOADING…',saved:'SAVED · OFFLINE',sample:'SAMPLE DATA',offline:'You\u2019re offline — showing saved results',stale:'Showing saved results — couldn\'t refresh',cantReach:'Can\u2019t reach the network',offlineMsg:'You’re offline — connect to load species',retry:'Retry'},
-    it:{live:'LIVE · iNAT',loading:'CARICAMENTO…',saved:'SALVATO · OFFLINE',sample:'DATI DI ESEMPIO',offline:'Sei offline — mostro i risultati salvati',stale:'Risultati salvati — impossibile aggiornare',cantReach:'Rete non raggiungibile',offlineMsg:'Sei offline — connettiti per caricare le specie',retry:'Riprova'},
+    en:{live:'LIVE · iNAT',loading:'LOADING…',saved:'SAVED · OFFLINE',sample:'SAMPLE DATA',offline:'You\u2019re offline — showing saved results',stale:'Showing saved results — couldn\'t refresh',cantReach:'Can\u2019t reach the network',offlineMsg:'You’re offline — connect to load species',pickArea:'Choose an area on the map to start',retry:'Retry'},
+    it:{live:'LIVE · iNAT',loading:'CARICAMENTO…',saved:'SALVATO · OFFLINE',sample:'DATI DI ESEMPIO',offline:'Sei offline — mostro i risultati salvati',stale:'Risultati salvati — impossibile aggiornare',cantReach:'Rete non raggiungibile',offlineMsg:'Sei offline — connettiti per caricare le specie',pickArea:'Scegli un\'area sulla mappa per iniziare',retry:'Riprova'},
     es:{live:'EN VIVO · iNAT',loading:'CARGANDO…',saved:'GUARDADO · OFFLINE',sample:'DATOS DE EJEMPLO',offline:'Estás sin conexión — mostrando resultados guardados',stale:'Resultados guardados — no se pudo actualizar',cantReach:'No se puede acceder a la red',retry:'Reintentar'},
     fr:{live:'EN DIRECT · iNAT',loading:'CHARGEMENT…',saved:'ENREGISTRÉ · HORS LIGNE',sample:'DONNÉES D\'EXEMPLE',offline:'Vous êtes hors ligne — résultats enregistrés',stale:'Résultats enregistrés — actualisation impossible',cantReach:'Réseau inaccessible',retry:'Réessayer'},
     de:{live:'LIVE · iNAT',loading:'LÄDT…',saved:'GESPEICHERT · OFFLINE',sample:'BEISPIELDATEN',offline:'Du bist offline — gespeicherte Ergebnisse',stale:'Gespeicherte Ergebnisse — Aktualisierung fehlgeschlagen',cantReach:'Netzwerk nicht erreichbar',retry:'Erneut'},
@@ -605,9 +597,8 @@ class Component extends DCLogic {
   stop(e){ if(e && e.stopPropagation) e.stopPropagation(); }
 
   // ---- resilience for poor / intermittent connectivity ----
-  // fetch with an abort timeout + one retry, so a weak signal can't hang the UI forever;
-  // responses are cached in localStorage and served stale-while-revalidate, so a previously
-  // seen area/species still shows instantly (and works fully offline) without any manual download.
+  // fetch with an abort timeout + one retry, so a weak signal can't hang the UI forever.
+  // No API-response caching: the app never shows stale data — offline simply shows an offline state.
   NET_TIMEOUT = 11000;
   async jget(url, tries){
     tries = tries==null ? 1 : tries;
@@ -778,7 +769,7 @@ class Component extends DCLogic {
     const pts=this.state.drawPts; if(pts.length<3){ return; }
     const lats=pts.map(p=>p[1]), lngs=pts.map(p=>p[0]);
     const bbox={swlat:Math.min(...lats),nelat:Math.max(...lats),swlng:Math.min(...lngs),nelng:Math.max(...lngs)};
-    this.set({ areaSet:true, areaName:'Drawn area', areaShort:'drawn area', bbox, areaKind:'draw', areaGeom:pts.slice(), pinCenter:null, drawing:false, drawMode:null, drawPts:[] });
+    this.set({ areaSet:true, areaName:this.t('drawnArea'), areaShort:this.t('drawnArea'), bbox, areaKind:'draw', areaGeom:pts.slice(), pinCenter:null, drawing:false, drawMode:null, drawPts:[] });
     this.clearDrawLayer();
     this.setDrawInteractions(false);
   }
@@ -796,7 +787,7 @@ class Component extends DCLogic {
     const lats=[pts[0][1],pts[1][1]], lngs=[pts[0][0],pts[1][0]];
     const bbox={swlat:Math.min(...lats),nelat:Math.max(...lats),swlng:Math.min(...lngs),nelng:Math.max(...lngs)};
     const ring=[[bbox.swlng,bbox.swlat],[bbox.nelng,bbox.swlat],[bbox.nelng,bbox.nelat],[bbox.swlng,bbox.nelat]];
-    this.set({ areaSet:true, areaName:'Box area', areaShort:'box', bbox, areaKind:'draw', areaGeom:ring, pinCenter:null, drawing:false, drawMode:null, drawPts:[] });
+    this.set({ areaSet:true, areaName:this.t('boxArea'), areaShort:this.t('boxArea'), bbox, areaKind:'draw', areaGeom:ring, pinCenter:null, drawing:false, drawMode:null, drawPts:[] });
     this.clearDrawLayer(); this.setDrawInteractions(false);
   }
   updatePinPreview(){
@@ -815,10 +806,17 @@ class Component extends DCLogic {
     const r=this.state.pinRadiusKm||5;
     const dLat=r/111, dLng=r/(111*Math.cos(c[0]*Math.PI/180));
     const bbox={ swlat:c[0]-dLat, nelat:c[0]+dLat, swlng:c[1]-dLng, nelng:c[1]+dLng };
-    this.set({ areaSet:true, areaName:'Pin · '+r+' km', areaShort:'pin · '+r+' km', bbox, areaKind:'pin', pinCenter:c, pinRadiusKm:r, areaGeom:null, drawing:false, drawMode:null });
+    this.set({ areaSet:true, areaName:this.t('pinArea')+' · '+r+' km', areaShort:this.t('pinArea')+' · '+r+' km', bbox, areaKind:'pin', pinCenter:c, pinRadiusKm:r, areaGeom:null, drawing:false, drawMode:null });
     this.clearDrawLayer(); this.setDrawInteractions(false);
   }
   cancelDraw(){ this.clearDrawLayer(); this.set({ drawing:false, drawMode:null, drawPts:[] }); this.setDrawInteractions(false); }
+  useScreenArea(){
+    const m = this._map; if(!m){ this.set({overlay:null}); return; }
+    const b = m.getBounds();
+    const bbox = { swlat:b.getSouth(), nelat:b.getNorth(), swlng:b.getWest(), nelng:b.getEast() };
+    // one-shot snapshot of what's currently visible; results won't follow later pan/zoom until re-picked
+    this.set({ areaSet:true, areaName:this.t('screenArea'), areaShort:this.t('screenArea'), bbox, areaKind:'screen', areaGeom:null, pinCenter:null, overlay:null });
+  }
   undoDrawPt(){ const pts = this.state.drawPts.slice(0,-1); this.set({ drawPts:pts }); this.updateDrawLayer(pts); }
   persist(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
   chooseMode(m){ this.persist('se_mode',m); if(this.state.startupSkip) this.persist('se_skip','1'); this.set({mode:m, showStartup:false}); }
@@ -842,6 +840,8 @@ class Component extends DCLogic {
   }
   maybeRefresh(){
     if(this.props.showInat === false) return;
+    // No area chosen at startup → load nothing; the user picks where to start. Map still centres on Rome.
+    if(!this.state.areaSet){ if(this.state.live && this.state.live.status!=='idle') this.set({live:{status:'idle', rows:[], total:0}}); return; }
     const k = this.liveKey();
     if(k === this._lk) return;
     this._lk = k;
@@ -999,7 +999,8 @@ class Component extends DCLogic {
     // ---- subject: a taxonomic group only; a chosen species opens the detail card, it is not a list filter ----
     const subjSet = st.subjectType==='group';
     const subjChip = st.subjectType==='group' ? this.t('g_'+st.subjectGroup) : this.t('anySpecies');
-    const q = (st.searchText||'').trim().toLowerCase();
+    const sq = (st.speciesQ||'').trim();
+    const pq = (st.placeQ||'').trim();
 
     const rowMap = s => {
       const expected = s.evidence==='expected';
@@ -1024,7 +1025,8 @@ class Component extends DCLogic {
     const countNum = areaTotal;
     const listCapped = useLive && unionList.length < areaTotal;
     const listEmpty = !useLive || unionList.length===0;
-    const emptyMsg = live.status==='loading' ? this.rt('loading')
+    const emptyMsg = !st.areaSet ? this.rt('pickArea')
+      : live.status==='loading' ? this.rt('loading')
       : live.status==='error' ? this.rt('cantReach')
       : !st.online ? this.rt('offlineMsg')
       : this.rt('noSpecies');
@@ -1064,15 +1066,15 @@ class Component extends DCLogic {
 
     // ---- search suggestions: live iNaturalist taxa only (any species on Earth); no demo fallback ----
     const liveTaxa = (st.taxaResults||[]).map(sp => ({ ...sp, confirm: () => this.openSpecies(sp) }));
-    const searchSpecies = q ? liveTaxa : [];
+    const searchSpecies = sq ? liveTaxa : [];
     const osmPlaceItem = r => {
       const parts = (r.display_name||'').split(',').map(s=>s.trim());
       const sub = parts.slice(1).join(', ');
       return { key:'osm:'+r.osm_type+r.osm_id+':'+r.lat+','+r.lon, name: parts[0]||r.display_name, sub, hasSub: !!sub, pick: () => this.pickPlaceResult(r) };
     };
     const osmMatches = (st.placeResults||[]).map(osmPlaceItem);
-    const searchPlaces = q ? osmMatches.slice(0,7) : [];
-    const showNoPlaces = !!q && !st.placeSearching && searchPlaces.length===0;
+    const searchPlaces = pq ? osmMatches.slice(0,7) : [];
+    const showNoPlaces = pq.length>=2 && !st.placeSearching && searchPlaces.length===0;
 
     // ---- overlays lists ----
     const whenPresets = this.WHENP.map(label => ({ label:this.whenName(label), pick: () => this.set({whenSet:true, whenLabel:label, d1:null, d2:null, overlay:null}) }));
@@ -1087,7 +1089,7 @@ class Component extends DCLogic {
 
     // ---- detail (only when a species is open) ----
     const sel = st.openSpecies || null;
-    const areaShort = st.areaSet ? st.areaShort : 'this region';
+    const areaShort = st.areaSet ? st.areaShort : this.t('thisRegion');
     const src = sel && sel.sources;
     const overlap = src ? Math.max(0, src.gbifTotal - src.gbifDedup) : 0;
     const isExpected = src ? (src.combined === 0) : (sel && sel.evidence === 'expected');
@@ -1141,15 +1143,15 @@ class Component extends DCLogic {
       pinRadiusLabel: (st.pinRadiusKm||5)+' km',
       onPinRadius: e => this.setPinRadius(+e.target.value),
       finishPinBtn: () => this.finishPin(),
-      pinDoneLabel: st.pinCenter ? 'Use this area' : 'Tap the map',
+      pinDoneLabel: st.pinCenter ? this.t('useThisArea') : this.t('tapMap'),
       drawHint: st.drawMode==='pin'
-        ? (st.pinCenter ? 'Set the radius, then confirm' : 'Tap the map to drop a pin')
+        ? (st.pinCenter ? this.t('hintPinSet') : this.t('hintPin'))
         : st.drawMode==='rect'
-        ? (st.drawPts.length ? 'Tap the opposite corner' : 'Tap one corner of the box')
-        : (st.drawPts.length ? ('Tap to add points · '+st.drawPts.length+' placed') : 'Tap the map to add points'),
-      drawCancelLabel: 'Cancel',
-      drawUndoLabel: '↶ Undo',
-      drawFinishLabel: st.drawPts.length>=3 ? 'Finish area' : ('Add '+(3-st.drawPts.length)+' more'),
+        ? (st.drawPts.length ? this.t('hintRectEnd') : this.t('hintRectStart'))
+        : (st.drawPts.length ? (this.t('hintDrawMore')+' · '+st.drawPts.length+' '+this.t('placed')) : this.t('hintDrawStart')),
+      drawCancelLabel: this.t('cancel'),
+      drawUndoLabel: '↶ '+this.t('undo'),
+      drawFinishLabel: st.drawPts.length>=3 ? this.t('finishArea') : this.t('addMore').replace('{n}', (3-st.drawPts.length)),
       drawFinishBg: st.drawPts.length>=3 ? A : '#b3bdae',
       drawFinishCursor: st.drawPts.length>=3 ? 'pointer' : 'default',
       cancelDraw: () => this.cancelDraw(),
@@ -1202,7 +1204,7 @@ class Component extends DCLogic {
       // sheet
       resultCount: this.fmt(countNum) + ' ' + this.t('species'),
       clock: this.clockText(),
-      sortLabel: (st.sortBy==='name' ? this.t('sort_name') : this.t('sort_count')) + ' ▾',
+      sortLabel: '⇅ ' + (st.sortBy==='name' ? this.t('sort_name') : this.t('sort_count')),
       toggleSort: () => this.toggleSort(),
       listEmpty, emptyMsg,
       listCapped, listCapNote: this.t('topN').replace('{n}', this.fmt(unionList.length)),
@@ -1219,7 +1221,7 @@ class Component extends DCLogic {
       taxonChips, speciesList,
       groupsExpanded: st.groupsExpanded,
       groupRowMax: st.groupsExpanded ? '300px' : '34px',
-      groupToggleLabel: st.groupsExpanded ? 'Less ▴' : 'More ▾',
+      groupToggleLabel: st.groupsExpanded ? (this.t('less')+' ▴') : (this.t('more')+' ▾'),
       toggleGroups: () => this.set({groupsExpanded: !st.groupsExpanded}),
       monthLabels: this.MONTHNAMES.map((m,i) => ({t: this.intlMonth(i,'narrow')})),
       L: this.TR[st.lang] || this.TR.en,
@@ -1234,7 +1236,12 @@ class Component extends DCLogic {
       // overlays
       overlayOpen: !!st.overlay,
       ovSearch: st.overlay==='search', ovArea: st.overlay==='area', ovWhen: st.overlay==='when', ovTime: st.overlay==='time', ovConfirm: false,
-      searchText: st.searchText, searchSpecies, searchPlaces,
+      speciesQ: st.speciesQ, placeQ: st.placeQ, searchSpecies, searchPlaces,
+      uiCancel: this.t('cancel'), uiSecSpecies: this.t('sec_species'), uiSecPlaces: this.t('sec_places'),
+      uiNoPlaces: this.t('noPlaces'), uiSearching: this.t('searching'), uiSpeciesPh: this.t('searchSpeciesPh'), uiPlacePh: this.t('searchPlacePh'),
+      uiScreenArea: this.t('screenArea'), uiNoObsMap: this.t('noObsMap'), uiObservations: this.t('observations'),
+      searchModeSpecies: st.searchMode!=='place', searchModePlace: st.searchMode==='place',
+      speciesBarBc: st.searchMode!=='place' ? A : 'rgba(32,36,31,.12)', placeBarBc: st.searchMode==='place' ? A : 'rgba(32,36,31,.12)',
       placeSearching: !!st.placeSearching, showNoPlaces,
       speciesSearching: !!st.taxaSearching,
       whenPresets, monthPresets, timeOptions,
@@ -1251,7 +1258,10 @@ class Component extends DCLogic {
       openWhen: () => this.set({overlay:'when'}),
       openTime: () => this.set({overlay:'time'}),
       closeOverlay: () => this.set({overlay:null}),
-      onSearch: e => { const v = e.target.value; this.set({searchText: v}); this.queuePlaceSearch(v); this.queueTaxaSearch(v); },
+      onSpeciesInput: e => { const v = e.target.value; this.set({speciesQ: v, searchMode:'species'}); this.queueTaxaSearch(v); },
+      onPlaceInput: e => { const v = e.target.value; this.set({placeQ: v, searchMode:'place'}); this.queuePlaceSearch(v); },
+      focusSpecies: () => this.set({searchMode:'species'}),
+      focusPlace: () => this.set({searchMode:'place'}),
       clearArea: e => { this.stop(e); this.set({areaSet:false}); },
       clearWhen: e => { this.stop(e); this.set({whenSet:false}); },
       clearTime: e => { this.stop(e); this.set({timeSet:false}); },
@@ -1260,7 +1270,8 @@ class Component extends DCLogic {
       pickDraw: () => this.startDraw(),
       pickPin: () => this.startPin(),
       pickRect: () => this.startRect(),
-      pickAnywhere: () => this.set({areaSet:false, bbox:null, areaGeom:null, areaKind:null, pinCenter:null, overlay:null}),
+      useScreen: () => this.useScreenArea(),
+      pickAnywhere: () => this.set({areaSet:true, areaName:this.t('anyArea'), areaShort:this.t('anyArea'), bbox:null, areaGeom:null, areaKind:'anywhere', pinCenter:null, overlay:null}),
       openSubject: () => this.set({overlay:'search'}),
       clearSubject: e => { this.stop(e); this.set({subjectType:null, subjectGroup:null}); },
       seeAll: () => this.set({view:'home', subjectType:null, subjectGroup:null}),
@@ -1294,16 +1305,16 @@ class Component extends DCLogic {
       const timer = setTimeout(()=>ctl.abort(), this.NET_TIMEOUT);
       const r = await fetch(url, { signal: ctl.signal });
       clearTimeout(timer);
-      if((this.state.searchText||'').trim() !== q) return;      // superseded by a newer keystroke
+      if((this.state.speciesQ||'').trim() !== q) return;      // superseded by a newer keystroke
       if(r.status===429 || r.status===503 || !r.ok) throw new Error('retry');
       const j = await r.json();
-      if((this.state.searchText||'').trim() !== q) return;
+      if((this.state.speciesQ||'').trim() !== q) return;
       const results = (j.results||[]).map(t => this.taxaToSpecies(t));
       if(!this._taxaCache) this._taxaCache = {};
       this._taxaCache[this.state.lang+'|'+q.toLowerCase()] = results;
       this.set({ taxaResults: results, taxaSearching:false });
     }catch(e){
-      if((this.state.searchText||'').trim() !== q) return;      // user moved on — stop quietly
+      if((this.state.speciesQ||'').trim() !== q) return;      // user moved on — stop quietly
       if(attempt >= 6){ this.set({ taxaResults:[], taxaSearching:false }); return; }  // give up silently
       const delay = Math.min(4000, 600 * Math.pow(1.7, attempt));
       this.set({ taxaSearching:true });
@@ -1348,16 +1359,16 @@ class Component extends DCLogic {
       const timer = setTimeout(()=>ctl.abort(), this.NET_TIMEOUT);
       const r = await fetch(url, { signal: ctl.signal });
       clearTimeout(timer);
-      if((this.state.searchText||'').trim() !== q) return;     // a newer keystroke superseded this query
+      if((this.state.placeQ||'').trim() !== q) return;     // a newer keystroke superseded this query
       if(r.status===429 || r.status===503 || !r.ok) throw new Error('retry');  // rate-limited / hiccup → retry silently
       const j = await r.json();
-      if((this.state.searchText||'').trim() !== q) return;
+      if((this.state.placeQ||'').trim() !== q) return;
       const results = this.normalizePhoton(j);
       if(!this._placeCache) this._placeCache = {};
       this._placeCache[this.state.lang+'|'+q.toLowerCase()] = results;
       this.set({ placeResults: results, placeSearching:false });
     }catch(e){
-      if((this.state.searchText||'').trim() !== q) return;     // user moved on — stop quietly
+      if((this.state.placeQ||'').trim() !== q) return;     // user moved on — stop quietly
       // never show an error to the user: keep the spinner and retry with backoff
       if(attempt >= 8){ this.set({ placeResults:[], placeSearching:false }); return; }  // give up silently after a while
       const delay = Math.min(4000, 600 * Math.pow(1.7, attempt));
@@ -1374,7 +1385,7 @@ class Component extends DCLogic {
     const parts = (r.display_name||'').split(',').map(s=>s.trim());
     const short = parts[0] || 'Place';
     const name = parts.slice(0,2).join(', ') || short;
-    this.set({ areaSet:true, areaName:name, areaShort:short, bbox, areaKind:'place', areaGeom:null, pinCenter:null, overlay:null, searchText:'', placeResults:[] });
+    this.set({ areaSet:true, areaName:name, areaShort:short, bbox, areaKind:'place', areaGeom:null, pinCenter:null, overlay:null, speciesQ:'', placeQ:'', placeResults:[] });
     // pull the precise polygon for the exact OSM object the user tapped (not a re-guess by name)
     this.fetchBoundaryById(r.osm_type, r.osm_id).then(ring => { if(ring && this.state.areaName===name) this.set({areaGeom:ring}); });
   }
