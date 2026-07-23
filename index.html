@@ -61,7 +61,7 @@
 
       <!-- TOP CONTROLS -->
       <div style="position:relative;z-index:2;padding:0 16px;width:100%;max-width:560px;margin-inline:auto">
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:15px 10px 6px;font:600 14px 'Hanken Grotesk';color:#20241f"><span>{{ clock }}</span><div style="display:flex;align-items:center;gap:9px"><div title="{{ netTitle }}" style="display:flex;align-items:flex-end;gap:2px;height:13px"><span style="width:3px;height:5px;border-radius:1px;background:{{ netBar1 }}"></span><span style="width:3px;height:8px;border-radius:1px;background:{{ netBar2 }}"></span><span style="width:3px;height:12px;border-radius:1px;background:{{ netBar3 }}"></span></div><div onClick="{{ openSettings }}" style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 8px rgba(20,30,18,.12);cursor:pointer">⚙</div></div></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:15px 10px 6px;font:600 14px 'Hanken Grotesk';color:#20241f"><span>{{ clock }}</span><div style="display:flex;align-items:center;gap:9px"><div title="{{ netTitle }}" style="display:flex;align-items:flex-end;gap:2px;height:13px"><span style="width:3px;height:5px;border-radius:1px;background:{{ netBar1 }}"></span><span style="width:3px;height:8px;border-radius:1px;background:{{ netBar2 }}"></span><span style="width:3px;height:12px;border-radius:1px;background:{{ netBar3 }}"></span></div><div onClick="{{ openSettings }}" role="button" tabindex="0" aria-label="{{ uiSettings }}" title="{{ uiSettings }}" style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 8px rgba(20,30,18,.12);cursor:pointer">⚙</div></div></div>
         <div style="margin-top:2px;display:flex;gap:8px;position:relative;z-index:6">
           <div style="flex:1;min-width:0;position:relative">
             <div style="background:#fff;border-radius:14px;padding:10px 12px;display:flex;align-items:center;gap:8px;box-shadow:0 6px 20px rgba(20,30,18,.13);border:1.5px solid {{ speciesBoxBc }}">
@@ -135,6 +135,12 @@
         </div>
       </sc-if>
 
+      <!-- my-location FAB — centers the map on the user and searches around them -->
+      <div onClick="{{ goToMyLocation }}" role="button" tabindex="0" aria-label="{{ uiNearMe }}" title="{{ uiNearMe }}" style="position:absolute;right:16px;bottom:{{ locateBottom }}px;z-index:4;width:46px;height:46px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(20,30,18,.16);cursor:pointer;transition:{{ toolbarTransition }}">
+        <sc-if value="{{ locating }}" hint-placeholder-val="{{ false }}"><span style="width:18px;height:18px;border-radius:50%;border:2.5px solid rgba(32,36,31,.18);border-top-color:{{ accent }};animation:seSpin .8s linear infinite"></span></sc-if>
+        <sc-if value="{{ notLocating }}" hint-placeholder-val="{{ true }}"><span style="width:19px;height:19px;border-radius:50%;border:2px solid {{ accent }};display:flex;align-items:center;justify-content:center"><span style="width:5px;height:5px;border-radius:50%;background:{{ accent }}"></span></span></sc-if>
+      </div>
+
       <!-- draw toolbar — rides just above the bottom sheet so it's never hidden behind it -->
       <div style="position:absolute;right:16px;bottom:{{ toolbarBottom }}px;z-index:4;display:flex;flex-direction:column;gap:2px;background:#fff;border-radius:14px;padding:5px;box-shadow:0 6px 18px rgba(20,30,18,.14);transition:{{ toolbarTransition }}">
         <div onClick="{{ openArea }}" style="width:36px;height:36px;border-radius:10px;background:#eaf0e8;display:flex;align-items:center;justify-content:center;cursor:pointer"><span style="width:12px;height:12px;border:2px solid #4f7a52;transform:rotate(45deg)"></span></div>
@@ -144,8 +150,8 @@
 
       <!-- BOTTOM SHEET -->
       <div style="position:absolute;left:0;right:0;bottom:0;z-index:3;background:#f7f6f2;border-radius:26px 26px 0 0;box-shadow:0 -10px 34px rgba(20,30,18,.14);height:{{ sheetH }}px;display:flex;flex-direction:column;transition:{{ sheetTransition }};max-width:560px;margin-inline:auto">
-        <div onPointerDown="{{ sheetDragStart }}" style="flex:none;cursor:grab;touch-action:none;padding:4px 0 2px">
-          <div style="padding:9px 0 12px;display:flex;justify-content:center"><div style="width:52px;height:6px;border-radius:3px;background:#c9c6bd"></div></div>
+        <div onPointerDown="{{ sheetDragStart }}" role="separator" aria-label="{{ uiSheet }}" style="flex:none;cursor:grab;touch-action:none;padding:2px 0 2px">
+          <div style="padding:15px 0 15px;display:flex;justify-content:center"><div style="width:60px;height:7px;border-radius:4px;background:#c9c6bd"></div></div>
           <div style="padding:0 20px 2px;display:flex;align-items:flex-end;justify-content:space-between">
             <div><div style="font:600 25px 'Hanken Grotesk';color:#20241f;line-height:1">{{ resultCount }}</div><sc-if value="{{ hasPresent }}" hint-placeholder-val="{{ false }}"><div style="font:500 12px 'Hanken Grotesk';color:#8a7326;margin-top:3px">{{ presentLabel }}</div></sc-if><div style="font:400 12px 'Hanken Grotesk';color:#8a8d84;margin-top:4px">{{ contextLine }}</div></div>
             <div style="display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex:none">
@@ -163,13 +169,13 @@
             </sc-if>
           </div>
         </sc-if>
-        <div style="padding:13px 16px 11px 20px;display:flex;align-items:flex-start;gap:8px;flex:none">
-          <div style="flex:1;min-width:0;display:flex;flex-wrap:wrap;gap:8px;max-height:{{ groupRowMax }};overflow:hidden;transition:max-height .28s cubic-bezier(.2,.8,.2,1)">
-            <sc-for list="{{ taxonChips }}" as="t" hint-placeholder-count="4">
-              <div onClick="{{ t.set }}" style="display:inline-flex;align-items:center;gap:6px;background:{{ t.bg }};color:{{ t.fg }};border:1px solid {{ t.bc }};border-radius:999px;padding:7px 13px;font:500 12.5px 'Hanken Grotesk';cursor:pointer;white-space:nowrap">{{ t.label }}<sc-if value="{{ t.hasCount }}" hint-placeholder-val="{{ false }}"><span style="font:600 11px 'IBM Plex Mono',monospace;opacity:.72">{{ t.countLabel }}</span></sc-if><sc-if value="{{ t.showShimmer }}" hint-placeholder-val="{{ false }}"><span style="width:15px;height:9px;border-radius:4px;background:currentColor;opacity:.28;animation:gcPulse 1s ease-in-out infinite"></span></sc-if></div>
+        <div style="padding:13px 20px 11px;display:flex;flex-wrap:wrap;align-items:center;gap:8px;flex:none">
+            <sc-for list="{{ taxonChips }}" as="t" hint-placeholder-count="7">
+              <div onClick="{{ t.set }}" role="button" tabindex="0" aria-label="{{ t.label }}" style="display:inline-flex;align-items:center;gap:6px;background:{{ t.bg }};color:{{ t.fg }};border:1px solid {{ t.bc }};border-radius:999px;padding:7px 13px;font:500 12.5px 'Hanken Grotesk';cursor:pointer;white-space:nowrap">{{ t.label }}<sc-if value="{{ t.hasCount }}" hint-placeholder-val="{{ false }}"><span style="font:600 11px 'IBM Plex Mono',monospace;opacity:.72">{{ t.countLabel }}</span></sc-if><sc-if value="{{ t.showShimmer }}" hint-placeholder-val="{{ false }}"><span style="width:15px;height:9px;border-radius:4px;background:currentColor;opacity:.28;animation:gcPulse 1s ease-in-out infinite"></span></sc-if></div>
             </sc-for>
-          </div>
-          <div onClick="{{ toggleGroups }}" style="flex:none;display:flex;align-items:center;gap:5px;background:#fff;border:1px solid rgba(32,36,31,.14);border-radius:999px;padding:7px 12px;font:600 12.5px 'Hanken Grotesk';color:#4f7a52;cursor:pointer;white-space:nowrap">{{ groupToggleLabel }}</div>
+            <sc-if value="{{ showGroupToggle }}" hint-placeholder-val="{{ true }}">
+            <div onClick="{{ toggleGroups }}" role="button" tabindex="0" style="flex:none;display:flex;align-items:center;gap:5px;background:#eef1ea;border:1px solid rgba(32,36,31,.14);border-radius:999px;padding:7px 13px;font:600 12.5px 'Hanken Grotesk';color:#4f7a52;cursor:pointer;white-space:nowrap">{{ groupToggleLabel }}</div>
+            </sc-if>
         </div>
         <div style="overflow-y:auto;padding:0 14px 20px;flex:1;opacity:{{ resultsOpacity }};transition:opacity .18s ease">
           <sc-if value="{{ listEmpty }}" hint-placeholder-val="{{ false }}">
@@ -312,8 +318,19 @@
           <div style="padding:0 18px;display:flex;flex-wrap:wrap;gap:8px">
             <div onClick="{{ anyTime }}" style="background:{{ anyTimeBg }};color:{{ anyTimeFg }};border:1px solid {{ anyTimeBc }};border-radius:999px;padding:10px 15px;font:600 13.5px 'Hanken Grotesk';cursor:pointer">{{ L.anyTime }}</div>
             <sc-for list="{{ timeOptions }}" as="t" hint-placeholder-count="6">
-              <div onClick="{{ t.pick }}" style="background:#fff;border:1px solid rgba(32,36,31,.12);border-radius:999px;padding:10px 15px;font:500 13.5px 'Hanken Grotesk';color:#42463f;cursor:pointer">{{ t.label }}</div>
+              <div onClick="{{ t.pick }}" style="background:{{ t.bg }};color:{{ t.fg }};border:1px solid {{ t.bc }};border-radius:999px;padding:10px 15px;font:500 13.5px 'Hanken Grotesk';cursor:pointer">{{ t.label }}</div>
             </sc-for>
+          </div>
+          <div style="padding:16px 20px 6px;font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;color:#a8a59c">{{ L.customRange }}</div>
+          <div style="padding:6px 18px;display:flex;align-items:center;gap:8px">
+            <select value="{{ customHourFrom }}" onChange="{{ setHourFrom }}" aria-label="{{ L.timeOfDay }}" style="flex:1;min-width:0;-webkit-appearance:none;-moz-appearance:none;appearance:none;background:#fff;border:1px solid rgba(32,36,31,.14);border-radius:12px;padding:11px 12px;font:500 13px 'Hanken Grotesk';color:#20241f;cursor:pointer">
+              <sc-for list="{{ hourOptions }}" as="h" hint-placeholder-count="24"><option value="{{ h.v }}">{{ h.label }}</option></sc-for>
+            </select>
+            <span style="color:#a8a59c;font:500 13px 'Hanken Grotesk'">→</span>
+            <select value="{{ customHourTo }}" onChange="{{ setHourTo }}" aria-label="{{ L.timeOfDay }}" style="flex:1;min-width:0;-webkit-appearance:none;-moz-appearance:none;appearance:none;background:#fff;border:1px solid rgba(32,36,31,.14);border-radius:12px;padding:11px 12px;font:500 13px 'Hanken Grotesk';color:#20241f;cursor:pointer">
+              <sc-for list="{{ hourOptions }}" as="h" hint-placeholder-count="24"><option value="{{ h.v }}">{{ h.label }}</option></sc-for>
+            </select>
+            <div onClick="{{ applyCustomTime }}" role="button" tabindex="0" style="flex:none;background:#20241f;color:#fff;border-radius:12px;padding:12px 15px;font:600 13px 'Hanken Grotesk';cursor:pointer">{{ L.apply }}</div>
           </div>
         </div>
       </sc-if>
@@ -325,9 +342,9 @@
     <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
     <div style="position:absolute;inset:0;background:#f7f6f2;display:flex;flex-direction:column;animation:fadeIn .2s ease">
       <div style="padding:15px 16px 4px;display:flex;align-items:center;justify-content:space-between;flex:none;width:100%;max-width:560px;margin-inline:auto">
-        <div onClick="{{ backHome }}" style="width:36px;height:36px;border-radius:50%;background:#eceae4;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:#42463f">‹</div>
+        <div onClick="{{ backHome }}" role="button" tabindex="0" aria-label="{{ uiBack }}" title="{{ uiBack }}" style="width:36px;height:36px;border-radius:50%;background:#eceae4;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:#42463f">‹</div>
         <span style="font:600 13px 'IBM Plex Mono',monospace;color:#9a9d94">{{ clock }}</span>
-        <div onClick="{{ toggleFav }}" style="width:36px;height:36px;border-radius:50%;background:#eceae4;display:flex;align-items:center;justify-content:center;cursor:pointer;color:{{ detail.favColor }};font-size:17px">{{ detail.favIcon }}</div>
+        <div onClick="{{ toggleFav }}" role="button" tabindex="0" aria-label="{{ uiFav }}" title="{{ uiFav }}" style="width:36px;height:36px;border-radius:50%;background:#eceae4;display:flex;align-items:center;justify-content:center;cursor:pointer;color:{{ detail.favColor }};font-size:17px">{{ detail.favIcon }}</div>
       </div>
 
       <div style="overflow-y:auto;flex:1;padding:0 0 24px;width:100%;max-width:560px;margin-inline:auto">
@@ -342,6 +359,8 @@
             <span style="background:{{ detail.evBg }};border:1px solid rgba(32,36,31,.08);border-radius:999px;padding:5px 11px;font:600 11.5px 'Hanken Grotesk';color:{{ detail.evFg }}">{{ detail.evLabel }}</span>
           </div>
           <p style="margin:13px 0 0;font:400 13.5px/1.6 'Hanken Grotesk';color:#5c5f57">{{ detail.desc }}</p>
+          <sc-if value="{{ detail.hasWiki }}" hint-placeholder-val="{{ false }}"><a href="{{ detail.wikiUrl }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;margin-top:11px;font:600 12.5px 'Hanken Grotesk';color:{{ accent }};text-decoration:none">{{ L.readWiki }} ↗</a></sc-if>
+          <sc-if value="{{ detail.hasPhotoAttr }}" hint-placeholder-val="{{ false }}"><div style="margin:9px 0 0;font:400 10px/1.4 'Hanken Grotesk';color:#a8a59c">◈ {{ detail.photoAttr }}</div></sc-if>
         </div>
 
         <!-- context banner -->
@@ -412,13 +431,6 @@
             <div style="margin-top:8px;font:400 11px/1.5 'Hanken Grotesk';color:#9a9d94">{{ detail.srcNote }}</div>
           </div>
         </sc-if>
-
-        <sc-if value="{{ detail.hasWiki }}" hint-placeholder-val="{{ false }}">
-          <a href="{{ detail.wikiUrl }}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:20px 22px 0;background:#fff;border:1px solid rgba(32,36,31,.1);border-radius:14px;padding:14px 16px;text-decoration:none">
-            <span style="font:600 13.5px 'Hanken Grotesk';color:#20241f">{{ L.readWiki }}</span>
-            <span style="font-size:16px;color:#4f7a52">↗</span>
-          </a>
-        </sc-if>
       </div>
     </div>
     </sc-if>
@@ -427,7 +439,8 @@
     <sc-if value="{{ photoZoomOpen }}" hint-placeholder-val="{{ false }}">
     <div onClick="{{ closePhoto }}" style="position:absolute;inset:0;z-index:60;background:rgba(12,14,10,.92);display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .18s ease;cursor:zoom-out">
       {{ photoZoomEl }}
-      <div onClick="{{ closePhoto }}" style="position:absolute;top:16px;right:16px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.16);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer">✕</div>
+      <sc-if value="{{ photoZoomHasAttr }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:0;right:0;bottom:0;padding:14px 20px;text-align:center;font:400 11px/1.4 'Hanken Grotesk';color:rgba(255,255,255,.72);background:linear-gradient(transparent,rgba(0,0,0,.5));pointer-events:none">{{ photoZoomAttr }}</div></sc-if>
+      <div onClick="{{ closePhoto }}" role="button" tabindex="0" aria-label="{{ uiClose }}" title="{{ uiClose }}" style="position:absolute;top:16px;right:16px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.16);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer">✕</div>
     </div>
     </sc-if>
 
@@ -511,6 +524,7 @@
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:420,&quot;height&quot;:860},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#4f7a52&quot;,&quot;options&quot;:[&quot;#4f7a52&quot;,&quot;#3f6a86&quot;,&quot;#b06a3c&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;},&quot;showInat&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Data&quot;}}">
 class Component extends DCLogic {
   // (removed) no demo/sample species: the app shows only live iNaturalist + GBIF data
+  DEFAULT_VIEW = { center:[41.9, 12.5], zoom:11 };  // fallback so the base map is NEVER left without a view
 
   state = {
     view:'home', overlay:null, selId:null, pendingId:null, searchText:'', speciesQ:'', placeQ:'', searchMode:'species', subjectType:null, subjectGroup:null, subjectSpecies:null,
@@ -518,11 +532,11 @@ class Component extends DCLogic {
     bbox:{swlat:41.80, swlng:12.35, nelat:41.99, nelng:12.62},
     live:{status:'idle', rows:[], total:0}, openSpecies:null, online:true,
     areaSet:false, areaName:'', areaShort:'', areaKind:null, areaGeom:null, pinCenter:null,
-    whenSet:false, whenLabel:'',
-    timeSet:false, timeLabel:'',
+    whenSet:false, whenLabel:'', whenMonths:null,
+    timeSet:false, timeLabel:'', timeCustom:null, customHourFrom:18, customHourTo:22,
     mode:'expert', showStartup:true, startupSkip:false, settingsOpen:false, accentColor:null, lang:'en', langMenu:false,
     drawing:false, drawMode:null, drawPts:[], placeResults:[], placeSearching:false, pinRadiusKm:5,
-    taxaResults:[], taxaSearching:false, favs:{}, sortBy:'count', netQ:null, netMs:0,
+    taxaResults:[], taxaSearching:false, favs:{}, sortBy:'count', netQ:null, netMs:0, locating:false,
   };
   ACCENTS = [{c:'#4f7a52',name:'Forest'},{c:'#3f6a86',name:'Ocean'},{c:'#b06a3c',name:'Clay'}];
   LANGS = [
@@ -622,6 +636,27 @@ class Component extends DCLogic {
     hi:{chooseArea:'क्षेत्र चुनें',draw:'बनाएँ',pin:'बिंदु + त्रिज्या',saved:'सहेजे गए क्षेत्र',anywhere:'कहीं भी'},
     ar:{chooseArea:'اختر منطقة',draw:'ارسم',pin:'نقطة + نطاق',saved:'المناطق المحفوظة',anywhere:'أي مكان'},
   };
+  UX = {
+    en:{nearMe:'Near me',back:'Back',fav:'Save',settings:'Settings',close:'Close',sheet:'Drag to resize the list'},
+    it:{nearMe:'Vicino a me',back:'Indietro',fav:'Salva',settings:'Impostazioni',close:'Chiudi',sheet:'Trascina per ridimensionare la lista'},
+    es:{nearMe:'Cerca de mí',back:'Atrás',fav:'Guardar',settings:'Ajustes',close:'Cerrar'},
+    fr:{nearMe:'Près de moi',back:'Retour',fav:'Enregistrer',settings:'Réglages',close:'Fermer'},
+    de:{nearMe:'In meiner Nähe',back:'Zurück',fav:'Speichern',settings:'Einstellungen',close:'Schließen'},
+    pt:{nearMe:'Perto de mim',back:'Voltar',fav:'Guardar',settings:'Definições',close:'Fechar'},
+    nl:{nearMe:'Dichtbij',back:'Terug',fav:'Opslaan',settings:'Instellingen',close:'Sluiten'},
+    ca:{nearMe:'A prop meu',back:'Enrere',fav:'Desa',settings:'Configuració',close:'Tanca'},
+    ru:{nearMe:'Рядом',back:'Назад',fav:'Сохранить',settings:'Настройки',close:'Закрыть'},
+    zh:{nearMe:'附近',back:'返回',fav:'收藏',settings:'设置',close:'关闭'},
+    ja:{nearMe:'現在地周辺',back:'戻る',fav:'保存',settings:'設定',close:'閉じる'},
+    pl:{nearMe:'W pobliżu',back:'Wstecz',fav:'Zapisz',settings:'Ustawienia',close:'Zamknij'},
+    el:{nearMe:'Κοντά μου',back:'Πίσω',fav:'Αποθήκευση',settings:'Ρυθμίσεις',close:'Κλείσιμο'},
+    ro:{nearMe:'Lângă mine',back:'Înapoi',fav:'Salvează',settings:'Setări',close:'Închide'},
+    uk:{nearMe:'Поруч',back:'Назад',fav:'Зберегти',settings:'Налаштування',close:'Закрити'},
+    tr:{nearMe:'Yakınımda',back:'Geri',fav:'Kaydet',settings:'Ayarlar',close:'Kapat'},
+    hi:{nearMe:'मेरे पास',back:'वापस',fav:'सहेजें',settings:'सेटिंग्स',close:'बंद करें'},
+    ar:{nearMe:'بالقرب مني',back:'رجوع',fav:'حفظ',settings:'الإعدادات',close:'إغلاق'},
+  };
+  ux(k){ const l = this.UX[this.state.lang] || this.UX.en; return l[k] != null ? l[k] : this.UX.en[k]; }
   RES = {
     en:{live:'LIVE · iNAT',loading:'LOADING…',cantReach:'Can\u2019t reach the network',offlineMsg:'You’re offline — connect to load species',pickArea:'Choose an area on the map to start',retry:'Retry'},
     it:{live:'LIVE · iNAT',loading:'CARICAMENTO…',cantReach:'Rete non raggiungibile',offlineMsg:'Sei offline — connettiti per caricare le specie',pickArea:'Scegli un\'area sulla mappa per iniziare',retry:'Riprova'},
@@ -708,19 +743,30 @@ class Component extends DCLogic {
   // fetch with an abort timeout + one retry, so a weak signal can't hang the UI forever.
   // No API-response caching: the app never shows stale data — offline simply shows an offline state.
   NET_TIMEOUT = 11000;
+  // fetch with abort-timeout + exponential backoff. Honors HTTP 429/503 (rate limit / busy): waits the
+  // server's Retry-After when given, otherwise 0.7s→1.4s→2.8s… so a throttle can't hammer the API or hang the UI.
   async jget(url, tries){
-    tries = tries==null ? 1 : tries;
-    const ctl = new AbortController();
-    const timer = setTimeout(()=>ctl.abort(), this.NET_TIMEOUT);
-    try{
-      const r = await fetch(url, { signal: ctl.signal });
-      clearTimeout(timer);
-      if(!r.ok) throw new Error('http '+r.status);
-      return await r.json();
-    }catch(e){
-      clearTimeout(timer);
-      if(tries>0){ await new Promise(res=>setTimeout(res, 700)); return this.jget(url, tries-1); }
-      throw e;
+    tries = tries==null ? 3 : tries;
+    let attempt = 0;
+    while(true){
+      const ctl = new AbortController();
+      const timer = setTimeout(()=>ctl.abort(), this.NET_TIMEOUT);
+      try{
+        const r = await fetch(url, { signal: ctl.signal });
+        clearTimeout(timer);
+        if(r.status===429 || r.status===503){
+          if(attempt>=tries) throw new Error('http '+r.status);
+          const ra = parseFloat(r.headers.get('retry-after'));
+          const wait = !isNaN(ra) ? ra*1000 : Math.min(8000, 700*Math.pow(2, attempt));
+          await new Promise(res=>setTimeout(res, wait)); attempt++; continue;
+        }
+        if(!r.ok) throw new Error('http '+r.status);
+        return await r.json();
+      }catch(e){
+        clearTimeout(timer);
+        if(attempt>=tries) throw e;
+        await new Promise(res=>setTimeout(res, Math.min(8000, 700*Math.pow(2, attempt)))); attempt++;
+      }
     }
   }
 
@@ -749,6 +795,17 @@ class Component extends DCLogic {
     this.measureNet();
     this._netTimer = setInterval(() => this.measureNet(), 15000);
     this.tryInitMap();
+    this.restoreUrl();
+    this._onKey = (e) => {
+      if(e.key!=='Escape' && e.keyCode!==27) return;
+      const st = this.state;
+      if(st.photoZoom){ this.set({photoZoom:null}); }
+      else if(st.overlay){ this.set({overlay:null}); }
+      else if(st.settingsOpen){ this.set({settingsOpen:false}); }
+      else if(st.drawing){ this.cancelDraw(); }
+      else if(st.view==='detail'){ this.set({view:'home'}); }
+    };
+    window.addEventListener('keydown', this._onKey);
     this._onNet = () => {
       const online = navigator.onLine;
       this.set({ online });
@@ -760,6 +817,7 @@ class Component extends DCLogic {
   componentWillUnmount(){
     if(this._onNet){ window.removeEventListener('online', this._onNet); window.removeEventListener('offline', this._onNet); }
     if(this._onResize){ window.removeEventListener('resize', this._onResize); }
+    if(this._onKey){ window.removeEventListener('keydown', this._onKey); }
     if(this._clock){ clearInterval(this._clock); this._clock=null; }
     clearTimeout(this._refreshT); clearTimeout(this._gcT); clearTimeout(this._placeT); clearTimeout(this._taxaT);
     if(this._netTimer){ clearInterval(this._netTimer); this._netTimer=null; }
@@ -777,6 +835,56 @@ class Component extends DCLogic {
   clockText(){ try{ return new Date().toLocaleTimeString(this.state.lang, {hour:'2-digit', minute:'2-digit'}); }catch(e){ return new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); } }
   retryLive(){ this._lk = null; this.maybeRefresh(); }
   accentColorNow(){ return this.state.accentColor || this.props.accent || '#4f7a52'; }
+  // ---- geolocation: center the map on the user and search a default-radius pin around them ----
+  goToMyLocation(){
+    if(!navigator.geolocation || this.state.locating) return;
+    this.set({ locating:true });
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        const lat = pos.coords.latitude, lng = pos.coords.longitude;
+        this._lastView = { center:[lat,lng], zoom:13 };
+        if(this._map){ try{ this._map.setView([lat,lng], 13, { animate:true }); }catch(e){} }
+        const r = this.state.pinRadiusKm || 5;
+        const dLat = r/111, dLng = r/(111*Math.cos(lat*Math.PI/180));
+        const bbox = { swlat:lat-dLat, nelat:lat+dLat, swlng:lng-dLng, nelng:lng+dLng };
+        this.set({ locating:false, areaSet:true, areaName:this.ux('nearMe'), areaShort:this.ux('nearMe'), bbox, areaKind:'pin', pinCenter:[lat,lng], pinRadiusKm:r, areaGeom:null, overlay:null });
+      },
+      () => this.set({ locating:false }),
+      { enableHighAccuracy:true, timeout:10000, maximumAge:60000 }
+    );
+  }
+  // ---- shareable deep-link: area + open species live in the URL hash, restored on load ----
+  syncUrl(){
+    const st = this.state, p = new URLSearchParams();
+    if(st.areaSet){ p.set('area', st.areaKind||'custom'); if(st.bbox) p.set('b', [st.bbox.swlat,st.bbox.swlng,st.bbox.nelat,st.bbox.nelng].map(n=>(+n).toFixed(4)).join(',')); }
+    if(st.view==='detail' && st.openSpecies && st.openSpecies.taxonId) p.set('sp', st.openSpecies.taxonId);
+    const s = p.toString();
+    if(s === this._lastUrl) return;
+    this._lastUrl = s;
+    try{ history.replaceState(null, '', location.pathname + location.search + (s ? ('#'+s) : '')); }catch(e){}
+  }
+  restoreUrl(){
+    let h = ''; try{ h = (location.hash||'').replace(/^#/,''); }catch(e){}
+    if(!h) return;
+    const p = new URLSearchParams(h);
+    const b = p.get('b'), area = p.get('area');
+    if(b){
+      const v = b.split(',').map(Number);
+      if(v.length===4 && v.every(x=>!isNaN(x))){
+        this.set({ areaSet:true, bbox:{swlat:v[0],swlng:v[1],nelat:v[2],nelng:v[3]}, areaKind:area||'screen', areaName:this.t('screenArea'), areaShort:this.t('screenArea') });
+      }
+    } else if(area==='anywhere'){
+      this.set({ areaSet:true, bbox:null, areaKind:'anywhere', areaName:this.t('anyArea'), areaShort:this.t('anyArea') });
+    }
+    const sp = p.get('sp');
+    if(sp){ this.openSpeciesById(sp); }
+  }
+  openSpeciesById(taxonId){
+    this.jget(this.INAT+'/taxa/'+taxonId+'?locale='+encodeURIComponent(this.state.lang)).then(j=>{
+      const tx = j && j.results && j.results[0]; if(!tx) return;
+      this.openSpecies(this.taxaToSpecies(tx));
+    }).catch(()=>{});
+  }
   tryInitMap(tries){
     tries = tries||0;
     if(this._map) return;
@@ -794,6 +902,8 @@ class Component extends DCLogic {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19, attribution:'© <a href="https://openstreetmap.org">OpenStreetMap</a>' }).addTo(map);
     map.attributionControl.setPrefix('');
     map.on('dblclick', (e) => { if(this.state.drawMode==='draw'){ this.finishDraw(); } });
+    // remember where the user is so re-init (after a view switch) restores it instead of blanking
+    map.on('moveend zoomend', () => { if(this.hasView()){ const c=map.getCenter(); this._lastView={ center:[c.lat,c.lng], zoom:map.getZoom() }; } });
     // ---- press-drag drawing via Pointer Events (mouse + touch): rect = drag a box, pin = drag out a
     //      radius, freeform = tap to add a vertex and drag an existing vertex to move it ----
     this._pdown = (ev) => this.onDrawPointerDown(ev);
@@ -801,9 +911,15 @@ class Component extends DCLogic {
     this._mapKey = JSON.stringify(this.state.bbox);
     setTimeout(()=>{ map.invalidateSize(); this.refreshAreaLayer(); this.fitArea(false); }, 60);
   }
+  hasView(){ try{ this._map.getCenter(); return true; }catch(e){ return false; } }
   fitArea(animate){
-    const b = this.state.bbox; if(!this._map || !b) return;
-    this._map.fitBounds([[b.swlat,b.swlng],[b.nelat,b.nelng]], { padding:[24,24], maxZoom:14, animate:!!animate });
+    const m = this._map; if(!m) return;
+    const b = this.state.bbox;
+    if(b){ m.fitBounds([[b.swlat,b.swlng],[b.nelat,b.nelng]], { padding:[24,24], maxZoom:14, animate:!!animate }); return; }
+    // "Qualsiasi area" / cleared area → bbox is null. Keep the current view; if the map has none yet
+    // (fresh re-init after a view switch), fall back to the last place the user was, then to a default —
+    // a Leaflet map with no view set renders blank and throws on later ops, which is what made it vanish.
+    if(!this.hasView()){ const v=this._lastView||this.DEFAULT_VIEW; m.setView(v.center, v.zoom, { animate:false }); }
   }
   areaSig(){
     const st=this.state;
@@ -888,29 +1004,68 @@ class Component extends DCLogic {
     const ring=[[a[1],a[0]],[b[1],a[0]],[b[1],b[0]],[a[1],b[0]]];
     this._drawLayer=window.L.polygon(ring,{color:A,weight:2,dashArray:'6 4',fillColor:A,fillOpacity:0.13}).addTo(this._map);
   }
-  // ---- species-detail observation map: OSM base + iNaturalist live observation-point tiles for this taxon ----
+  // ---- species-detail observation map: OSM base + interactive client-side CLUSTERED observation points ----
   syncObsMap(){
     const st = this.state, sel = st.openSpecies;
     const el = document.getElementById('se-obsmap');
     const taxonId = sel && sel.taxonId;
     if(st.view!=='detail' || !el || !window.L || !taxonId){
-      if(this._obsMap){ try{ this._obsMap.remove(); }catch(e){} this._obsMap=null; this._obsEl=null; this._obsTaxon=null; this._obsLayer=null; }
+      if(this._obsMap){ try{ this._obsMap.remove(); }catch(e){} this._obsMap=null; this._obsEl=null; this._obsTaxon=null; this._obsClusterLayer=null; this._obsPts=null; }
       return;
     }
-    if(this._obsMap && this._obsEl!==el){ try{ this._obsMap.remove(); }catch(e){} this._obsMap=null; this._obsLayer=null; this._obsTaxon=null; }
+    if(this._obsMap && this._obsEl!==el){ try{ this._obsMap.remove(); }catch(e){} this._obsMap=null; this._obsClusterLayer=null; this._obsTaxon=null; this._obsPts=null; }
     if(!this._obsMap){
       const m = L.map(el, { zoomControl:false, attributionControl:false, dragging:true, tap:true, scrollWheelZoom:false });
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19 }).addTo(m);
-      this._obsMap = m; this._obsEl = el; this._obsTaxon = null; this._obsLayer = null;
+      this._obsMap = m; this._obsEl = el; this._obsTaxon = null; this._obsClusterLayer = null; this._obsPts = null;
+      m.on('moveend zoomend', () => this.renderObsClusters());
       const b = st.bbox; if(b) m.fitBounds([[b.swlat,b.swlng],[b.nelat,b.nelng]], { padding:[8,8], maxZoom:12, animate:false });
       setTimeout(()=>{ try{ m.invalidateSize(); }catch(e){} }, 60);
     }
     if(this._obsTaxon!==taxonId){
-      if(this._obsLayer){ try{ this._obsMap.removeLayer(this._obsLayer); }catch(e){} }
-      this._obsLayer = L.tileLayer('https://api.inaturalist.org/v1/points/{z}/{x}/{y}.png?taxon_id='+taxonId+'&verifiable=true', { maxZoom:19, opacity:0.95 }).addTo(this._obsMap);
-      this._obsTaxon = taxonId;
+      this._obsTaxon = taxonId; this._obsPts = null;
+      if(this._obsClusterLayer){ try{ this._obsMap.removeLayer(this._obsClusterLayer); }catch(e){} this._obsClusterLayer=null; }
       const b = st.bbox; if(b) this._obsMap.fitBounds([[b.swlat,b.swlng],[b.nelat,b.nelng]], { padding:[8,8], maxZoom:12, animate:false });
+      this.fetchObsPoints(taxonId);
     }
+  }
+  async fetchObsPoints(taxonId){
+    const b = this.state.bbox;
+    const p = new URLSearchParams({ taxon_id:String(taxonId), verifiable:'true', mappable:'true', per_page:'200', order_by:'created_at' });
+    if(b){ p.set('nelat',b.nelat); p.set('nelng',b.nelng); p.set('swlat',b.swlat); p.set('swlng',b.swlng); }
+    try{
+      const j = await this.jget(this.INAT+'/observations?'+p.toString());
+      if(this._obsTaxon!==taxonId) return;   // species changed while loading
+      const pts = (j.results||[]).map(o => {
+        const g = o.geojson;
+        if(g && g.coordinates) return [g.coordinates[1], g.coordinates[0]];
+        if(o.location){ const c = String(o.location).split(',').map(Number); if(c.length===2 && !isNaN(c[0])) return [c[0],c[1]]; }
+        return null;
+      }).filter(Boolean);
+      this._obsPts = pts; this.renderObsClusters();
+    }catch(e){ /* keep OSM base; clusters just won't appear */ }
+  }
+  // grid-cluster in screen space — cell size is fixed in pixels, so clusters naturally split apart as you zoom in
+  renderObsClusters(){
+    const m = this._obsMap, pts = this._obsPts; if(!m || !pts || !window.L) return;
+    if(this._obsClusterLayer){ try{ m.removeLayer(this._obsClusterLayer); }catch(e){} this._obsClusterLayer=null; }
+    const A = this.accentColorNow(), cell = 52, cells = {};
+    pts.forEach(pt => {
+      let q; try{ q = m.latLngToContainerPoint(pt); }catch(e){ return; }
+      const k = Math.floor(q.x/cell)+':'+Math.floor(q.y/cell);
+      const c = cells[k] || (cells[k]={n:0,sx:0,sy:0});
+      c.n++; c.sx+=pt[0]; c.sy+=pt[1];
+    });
+    const g = L.layerGroup();
+    Object.keys(cells).forEach(k => {
+      const c = cells[k], lat = c.sx/c.n, lng = c.sy/c.n;
+      if(c.n===1){ L.circleMarker([lat,lng], { radius:5, color:'#fff', weight:1.5, fillColor:A, fillOpacity:.95 }).addTo(g); return; }
+      const r = Math.min(22, 11 + Math.log2(c.n)*3);
+      L.circleMarker([lat,lng], { radius:r, color:'#fff', weight:2, fillColor:A, fillOpacity:.82 }).addTo(g);
+      const d = r*2;
+      L.marker([lat,lng], { interactive:false, icon: L.divIcon({ className:'', iconSize:[d,d], html:'<div style="font:700 11px \'IBM Plex Mono\',monospace;color:#fff;text-align:center;width:'+d+'px;line-height:'+d+'px">'+this.fmt(c.n)+'</div>' }) }).addTo(g);
+    });
+    this._obsClusterLayer = g.addTo(m);
   }
   finishDraw(){
     const pts=this.state.drawPts; if(pts.length<3){ return; }
@@ -981,14 +1136,15 @@ class Component extends DCLogic {
     this.refreshAreaLayer();
     if(this.state.drawMode==='pin'){ this.updatePinPreview(); }   // live pin+radius preview follows state
     if(key !== this._mapKey){ this._mapKey = key; setTimeout(()=>this.fitArea(false), 0); }
+    this.syncUrl();
   }
   liveKey(){
     const st = this.state;
-    return JSON.stringify({ b: st.bbox, g: st.subjectType==='group' ? st.subjectGroup : null, d1:st.whenSet?st.d1:null, d2:st.whenSet?st.d2:null, t:st.timeSet?st.timeLabel:null, lang:st.lang });
+    return JSON.stringify({ b: st.bbox, g: st.subjectType==='group' ? st.subjectGroup : null, d1:st.whenSet?st.d1:null, d2:st.whenSet?st.d2:null, mo:st.whenSet?st.whenMonths:null, t:st.timeSet?st.timeLabel:null, lang:st.lang });
   }
   // ---- per-group species counts: fetched ONCE per area/date/time (key excludes the selected group),
   //      so switching group chips never refetches and the counts never flash back to 0 ----
-  groupKey(){ const st=this.state; return JSON.stringify({ b:st.bbox, d1:st.whenSet?st.d1:null, d2:st.whenSet?st.d2:null, t:st.timeSet?st.timeLabel:null }); }
+  groupKey(){ const st=this.state; return JSON.stringify({ b:st.bbox, d1:st.whenSet?st.d1:null, d2:st.whenSet?st.d2:null, mo:st.whenSet?st.whenMonths:null, t:st.timeSet?st.timeLabel:null }); }
   maybeGroupCounts(){
     if(this.props.showInat === false) return;
     if(!this.state.areaSet || !this.state.bbox){ if(this.state.groupCounts || this.state.groupCountsLoading) this.set({groupCounts:null, groupCountsLoading:false}); this._gk=null; return; }
@@ -1033,11 +1189,27 @@ class Component extends DCLogic {
   stripHtml(s){ const t = (s||'').replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim(); return t.length>230 ? t.slice(0,227)+'…' : t; }
   bboxParams(p, b){ if(b){ p.set('nelat',b.nelat); p.set('nelng',b.nelng); p.set('swlat',b.swlat); p.set('swlng',b.swlng); } }
   HOURS = { Dawn:[5,6,7], Morning:[7,8,9,10,11], Daytime:[9,10,11,12,13,14,15,16,17], Dusk:[17,18,19,20], Twilight:[5,6,7,18,19,20], Night:[21,22,23,0,1,2,3,4] };
+  // inclusive hour list from a→b, wrapping past midnight (e.g. 21→4 = 21,22,23,0,1,2,3,4)
+  hoursInRange(a,b){ const out=[]; let h=((a%24)+24)%24; const end=((b%24)+24)%24; for(let i=0;i<24;i++){ out.push(h); if(h===end) break; h=(h+1)%24; } return out; }
+  // the hours currently in effect: a user-defined custom range takes precedence over the named band
+  activeHours(){ const st=this.state; if(!st.timeSet) return null; if(st.timeCustom) return this.hoursInRange(st.timeCustom.from, st.timeCustom.to); return this.HOURS[st.timeLabel] || null; }
   filterParams(p){ const st=this.state;
     if(st.whenSet && st.d1) p.set('d1', st.d1);
     if(st.whenSet && st.d2) p.set('d2', st.d2);
-    if(st.timeSet && this.HOURS[st.timeLabel]) this.HOURS[st.timeLabel].forEach(h => p.append('hour', h));
-    return (st.whenSet && (st.d1||st.d2)) || (st.timeSet && this.HOURS[st.timeLabel]);
+    if(st.whenSet && st.whenMonths && st.whenMonths.length) st.whenMonths.forEach(m => p.append('month', m));
+    const hrs = this.activeHours(); if(hrs) hrs.forEach(h => p.append('hour', h));
+    const whenActive = st.whenSet && (st.d1 || st.d2 || (st.whenMonths && st.whenMonths.length));
+    return whenActive || !!hrs;
+  }
+  // iNaturalist website link that mirrors the ACTIVE filters (area + date/month + hour) so what the user
+  // sees on iNat matches the in-app results — previously the link dropped every filter but the taxon + bbox.
+  inatObsUrl(sel){
+    if(!sel || !sel.taxonId) return 'https://www.inaturalist.org/taxa/search?q='+encodeURIComponent((sel&&(sel.sci||sel.common))||'');
+    const st=this.state, p=new URLSearchParams();
+    p.set('taxon_id', sel.taxonId); p.set('verifiable','true');
+    if(st.bbox){ p.set('nelat',st.bbox.nelat); p.set('nelng',st.bbox.nelng); p.set('swlat',st.bbox.swlat); p.set('swlng',st.bbox.swlng); }
+    this.filterParams(p);
+    return 'https://www.inaturalist.org/observations?'+p.toString();
   }
 
   mapLive(x){
@@ -1045,7 +1217,9 @@ class Component extends DCLogic {
     const tk = this.ICONIC_REV[t.iconic_taxon_name] || 'other';
     const cs = t.conservation_status;
     const status = cs ? this.cap(cs.status_name || cs.status || '') : '';
-    const photo = t.default_photo ? (t.default_photo.medium_url || t.default_photo.square_url || '') : '';
+    const dp = t.default_photo || null;
+    const photo = dp ? (dp.medium_url || dp.square_url || '') : '';
+    const photoAttr = dp ? (dp.attribution || '') : '';
     const desc = t.wikipedia_summary
       ? this.stripHtml(t.wikipedia_summary)
       : (this.fmt(x.count)+' '+this.t('obsHere'));
@@ -1053,7 +1227,7 @@ class Component extends DCLogic {
       id:'l'+t.id, taxonId:t.id, live:true, seasonLoaded:false,
       common: t.preferred_common_name || t.name, sci: t.name,
       taxon: this.TKLABEL[tk] || 'Other', tk, inat: x.count,
-      status: status, best:'—', desc, photo,
+      status: status, best:'—', desc, photo, photoAttr,
       tod:[1,1,1,1], season:Array(12).fill(0), peak:'',
     };
   }
@@ -1133,6 +1307,7 @@ class Component extends DCLogic {
       const j = await this.jget(this.INAT+'/taxa/'+id+'?locale='+encodeURIComponent(this.state.lang));
       const tx = (j.results && j.results[0]) || null; if(!tx) return;
       const patch = { wikiUrl: tx.wikipedia_url || '', rankLabel: tx.rank ? this.cap(tx.rank) : '', globalCount: tx.observations_count || 0 };
+      if(tx.default_photo){ if(tx.default_photo.attribution) patch.photoAttr = tx.default_photo.attribution; if(!s.photo && (tx.default_photo.medium_url||tx.default_photo.square_url)) patch.photo = tx.default_photo.medium_url||tx.default_photo.square_url; }
       // iNaturalist serves a localized Wikipedia summary when locale is passed — richer than the count fallback
       if(tx.wikipedia_summary){ patch.desc = this.stripHtml(tx.wikipedia_summary); }
       this.mergeOpen(s.id, patch);
@@ -1249,12 +1424,12 @@ class Component extends DCLogic {
     let sum8 = 0, have8 = true;
     KNOWN8.forEach(kk => { if(gc[kk]==null) have8 = false; else sum8 += gc[kk]; });
     const otherCnt = (gc.all!=null && have8) ? Math.max(0, gc.all - sum8) : null;
-    const taxonChips = taxaOrdered.map(([k,label]) => {
+    const allTaxonChips = taxaOrdered.map(([k,label]) => {
       const locLabel = k==='all' ? this.t('anyGroup') : this.t('g_'+k);
       const on = k==='all' ? st.subjectType===null : (st.subjectType==='group' && st.subjectGroup===k);
       const cnt = k==='other' ? otherCnt : gc[k];
       return {
-        key:k, label: locLabel,
+        key:k, label: locLabel, active: on,
         hasCount: st.areaSet && cnt!=null,
         countLabel: cnt!=null ? this.fmt(cnt) : '',
         showShimmer: st.areaSet && gcLoading && cnt==null,
@@ -1264,6 +1439,16 @@ class Component extends DCLogic {
           : this.set({subjectType:'group', subjectGroup:k}),
       };
     });
+    // collapsed: show the first 7 chips + the toggle right beside them (so it reads as part of the group row,
+    // not a stray button); always keep the active chip visible even when it sits past the cut.
+    const COLLAPSED_CHIPS = 7;
+    const showGroupToggle = allTaxonChips.length > COLLAPSED_CHIPS;
+    let taxonChips = allTaxonChips;
+    if(showGroupToggle && !st.groupsExpanded){
+      taxonChips = allTaxonChips.slice(0, COLLAPSED_CHIPS);
+      const ai = allTaxonChips.findIndex(c=>c.active);
+      if(ai>=COLLAPSED_CHIPS) taxonChips = taxonChips.concat([allTaxonChips[ai]]);
+    }
 
     // ---- facet chips ----
     const filledBg='#20241f', filledFg='#fff', filledBc='#20241f';
@@ -1289,15 +1474,25 @@ class Component extends DCLogic {
     const showNoPlaces = pq.length>=2 && !st.placeSearching && searchPlaces.length===0;
 
     // ---- overlays lists ----
-    const whenPresets = this.WHENP.map(label => ({ label:this.whenName(label), pick: () => this.set({whenSet:true, whenLabel:label, d1:null, d2:null, overlay:null}) }));
+    const isoD = d => { const z=new Date(d.getTime()-d.getTimezoneOffset()*60000); return z.toISOString().slice(0,10); };
+    const today = new Date();
+    const whenPresets = [
+      { label:this.t('tw_week'),   pick: () => { const a=new Date(); a.setDate(a.getDate()-6); this.set({whenSet:true, whenLabel:this.t('tw_week'),   d1:isoD(a), d2:isoD(today), whenMonths:null, overlay:null}); } },
+      { label:this.t('tw_month'),  pick: () => { const a=new Date(today.getFullYear(), today.getMonth(), 1); this.set({whenSet:true, whenLabel:this.t('tw_month'),  d1:isoD(a), d2:isoD(today), whenMonths:null, overlay:null}); } },
+      { label:this.t('tw_spring'), pick: () => this.set({whenSet:true, whenLabel:this.t('tw_spring'), d1:null, d2:null, whenMonths:[3,4,5], overlay:null}) },
+      { label:this.t('tw_summer'), pick: () => this.set({whenSet:true, whenLabel:this.t('tw_summer'), d1:null, d2:null, whenMonths:[6,7,8], overlay:null}) },
+    ];
     const fmtD = iso => { if(!iso) return ''; const [y,m,d]=iso.split('-'); return this.intlMonth(+m-1,'short')+' '+(+d); };
     const applyCustom = () => {
       const a=st.customFrom, b=st.customTo; if(!a&&!b) return;
       const label = a&&b ? (fmtD(a)+' – '+fmtD(b)) : (a ? (fmtD(a)+' →') : ('→ '+fmtD(b)));
-      this.set({whenSet:true, whenLabel:label, d1:a||null, d2:b||null, overlay:null});
+      this.set({whenSet:true, whenLabel:label, d1:a||null, d2:b||null, whenMonths:null, overlay:null});
     };
-    const monthPresets = this.MONTHNAMES.map((label,i) => ({ label:this.intlMonth(i,'short'), pick: () => this.set({whenSet:true, whenLabel:this.intlMonth(i,'short'), overlay:null}) }));
-    const timeOptions = this.TIMEOPTS.map(label => ({ label:this.timeName(label), pick: () => this.set({timeSet:true, timeLabel:label, overlay:null}) }));
+    const monthPresets = this.MONTHNAMES.map((label,i) => ({ label:this.intlMonth(i,'short'), pick: () => this.set({whenSet:true, whenLabel:this.intlMonth(i,'long'), d1:null, d2:null, whenMonths:[i+1], overlay:null}) }));
+    const pad2 = n => String(n).padStart(2,'0');
+    const timeOptions = this.TIMEOPTS.map(label => { const on = st.timeSet && !st.timeCustom && st.timeLabel===label; return { label:this.timeName(label), bg: on?A:'#fff', fg: on?'#fff':'#42463f', bc: on?A:'rgba(32,36,31,.12)', pick: () => this.set({timeSet:true, timeLabel:label, timeCustom:null, overlay:null}) }; });
+    const hourOptions = Array.from({length:24}, (_,v) => ({ v, label: pad2(v)+':00' }));
+    const applyCustomTime = () => { const f=+st.customHourFrom||0, t=+st.customHourTo||0; this.set({timeSet:true, timeCustom:{from:f,to:t}, timeLabel: pad2(f)+':00–'+pad2(t)+':59', overlay:null}); };
 
     // ---- detail (only when a species is open) ----
     const sel = st.openSpecies || null;
@@ -1314,13 +1509,12 @@ class Component extends DCLogic {
       inat: this.fmt(src ? src.inat : (sel.inat||0)),
       inatLine: this.t('reports') + ' · ' + areaShort,
       hasPhoto: !!sel.photo,
+      hasPhotoAttr: !!sel.photoAttr, photoAttr: sel.photoAttr || '',
       hasWiki: !!sel.wikiUrl, wikiUrl: sel.wikiUrl||'',
       photoEl: sel.photo ? React.createElement('img', { src: sel.photo, alt:'', style:{ width:'100%', height:'100%', objectFit:'cover', display:'block' } }) : null,
       hasObsMap: !!sel.taxonId, noObsMap: !sel.taxonId,
       isFav, favIcon: isFav ? '♥' : '♡', favColor: isFav ? '#b0563c' : '#42463f',
-      inatUrl: sel.taxonId
-        ? ('https://www.inaturalist.org/observations?taxon_id='+sel.taxonId + (st.bbox ? ('&nelat='+st.bbox.nelat+'&nelng='+st.bbox.nelng+'&swlat='+st.bbox.swlat+'&swlng='+st.bbox.swlng) : ''))
-        : ('https://www.inaturalist.org/taxa/search?q='+encodeURIComponent(sel.sci||sel.common||'')),
+      inatUrl: this.inatObsUrl(sel),
       peakLabel: this.peakText(sel),
       inatCtx: st.whenSet ? this.t('showingFor') : '',
       months: sel.season.map(h => ({ h, color: h>=65 ? A : '#dcdad2' })),
@@ -1395,14 +1589,18 @@ class Component extends DCLogic {
       simpleDot: st.mode==='simple' ? A : 'transparent',
       expertDot: st.mode==='expert' ? A : 'transparent',
       accentSwatches: this.ACCENTS.map(a => { const on=(st.accentColor||this.props.accent||'#4f7a52')===a.c; return { c:a.c, name:a.name, active:on, pick:()=>this.setAccent(a.c), ring: on ? ('0 0 0 3px #f7f6f2, 0 0 0 5px '+a.c) : 'inset 0 0 0 1px rgba(0,0,0,.06)', labelColor: on ? '#20241f' : '#8a8d84' }; }),
-      anyDate: () => this.set({whenSet:false, d1:null, d2:null, overlay:null}),
-      anyTime: () => this.set({timeSet:false, overlay:null}),
+      anyDate: () => this.set({whenSet:false, d1:null, d2:null, whenMonths:null, overlay:null}),
+      anyTime: () => this.set({timeSet:false, timeCustom:null, overlay:null}),
       anyDateActive: !st.whenSet, anyTimeActive: !st.timeSet,
       anyDateBg: !st.whenSet?A:'#fff', anyDateFg: !st.whenSet?'#fff':'#42463f', anyDateBc: !st.whenSet?A:'rgba(32,36,31,.12)',
       anyTimeBg: !st.timeSet?A:'#fff', anyTimeFg: !st.timeSet?'#fff':'#42463f', anyTimeBc: !st.timeSet?A:'rgba(32,36,31,.12)',
       sheetH: st.sheetH,
       sheetTransition: st.sheetDragging ? 'none' : 'height .3s cubic-bezier(.2,.8,.2,1)',
       toolbarBottom: st.sheetH + 12,
+      locateBottom: st.sheetH + 12 + 132,
+      locating: !!st.locating, notLocating: !st.locating,
+      goToMyLocation: () => this.goToMyLocation(),
+      uiNearMe: this.ux('nearMe'), uiSettings: this.ux('settings'), uiSheet: this.ux('sheet'), uiBack: this.ux('back'), uiFav: this.ux('fav'), uiClose: this.ux('close'),
       toolbarTransition: st.sheetDragging ? 'none' : 'bottom .3s cubic-bezier(.2,.8,.2,1)',
       sheetDragStart: (e) => this.sheetDragStart(e),
       areaSet: st.areaSet,
@@ -1445,7 +1643,7 @@ class Component extends DCLogic {
       taxonChips, speciesList,
       resultsOpacity: liveLoading ? 0.45 : 1,
       groupsExpanded: st.groupsExpanded,
-      groupRowMax: st.groupsExpanded ? '300px' : '34px',
+      showGroupToggle,
       groupToggleLabel: st.groupsExpanded ? (this.t('less')+' ▴') : (this.t('more')+' ▾'),
       toggleGroups: () => this.set({groupsExpanded: !st.groupsExpanded}),
       monthLabels: this.MONTHNAMES.map((m,i) => ({t: this.intlMonth(i,'narrow')})),
@@ -1476,15 +1674,20 @@ class Component extends DCLogic {
       uiScreenArea: this.t('screenArea'), uiScreenAreaSub: this.t('screenAreaSub'), uiNoObsMap: this.t('noObsMap'), uiObservations: this.t('observations'),
       uiRectSub: this.t('rectSub'), uiPinSub: this.t('pinSub'), uiDrawSub: this.t('drawSub'), uiAnywhereSub: this.t('anywhereSub'),
       photoZoomOpen: !!st.photoZoom, photoZoomUrl: st.photoZoom || '',
+      photoZoomHasAttr: !!st.photoZoomAttr, photoZoomAttr: st.photoZoomAttr || '',
       photoZoomEl: st.photoZoom ? React.createElement('img', { src: st.photoZoom, alt:'', style:{ maxWidth:'100%', maxHeight:'100%', borderRadius:'12px', boxShadow:'0 12px 40px rgba(0,0,0,.5)' } }) : null,
       photoCursor: (sel && sel.photo) ? 'zoom-in' : 'default',
-      openPhoto: () => { const p = st.openSpecies; if(!p || !p.photo) return; const big = String(p.photo).replace('/square.','/large.').replace('/medium.','/large.'); this.set({photoZoom: big}); },
+      openPhoto: () => { const p = st.openSpecies; if(!p || !p.photo) return; const big = String(p.photo).replace('/square.','/large.').replace('/medium.','/large.'); this.set({photoZoom: big, photoZoomAttr: p.photoAttr||''}); },
       closePhoto: () => this.set({photoZoom:null}),
       searchModeSpecies: st.searchMode!=='place', searchModePlace: st.searchMode==='place',
       speciesBarBc: st.searchMode!=='place' ? A : 'rgba(32,36,31,.12)', placeBarBc: st.searchMode==='place' ? A : 'rgba(32,36,31,.12)',
       placeSearching: !!st.placeSearching, showNoPlaces,
       speciesSearching: !!st.taxaSearching,
       whenPresets, monthPresets, timeOptions,
+      hourOptions, customHourFrom: st.customHourFrom, customHourTo: st.customHourTo,
+      setHourFrom: e => this.set({customHourFrom: +e.target.value}),
+      setHourTo: e => this.set({customHourTo: +e.target.value}),
+      applyCustomTime,
       customFrom: st.customFrom||'', customTo: st.customTo||'',
       setFrom: e => this.set({customFrom:e.target.value}),
       setTo: e => this.set({customTo:e.target.value}),
@@ -1530,11 +1733,13 @@ class Component extends DCLogic {
   }
   taxaToSpecies(t){
     const tk = this.ICONIC_REV[t.iconic_taxon_name] || 'other';
-    const photo = t.default_photo ? (t.default_photo.medium_url || t.default_photo.square_url || '') : '';
+    const dp = t.default_photo || null;
+    const photo = dp ? (dp.medium_url || dp.square_url || '') : '';
+    const photoAttr = dp ? (dp.attribution || '') : '';
     return { id:'t'+t.id, taxonId:t.id, live:true, seasonLoaded:false,
       common: t.preferred_common_name || t.name, sci: t.name,
       taxon: this.TKLABEL[tk] || 'Other', tk, inat: t.observations_count||0,
-      status:'', best:'—', desc:'', photo, tod:[1,1,1,1], season:Array(12).fill(0), peak:'' };
+      status:'', best:'—', desc:'', photo, photoAttr, tod:[1,1,1,1], season:Array(12).fill(0), peak:'' };
   }
   async runTaxaSearch(q, attempt){
     attempt = attempt||0;
