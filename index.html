@@ -143,9 +143,9 @@
 
       <!-- draw toolbar — rides just above the bottom sheet so it's never hidden behind it -->
       <div style="position:absolute;right:16px;bottom:{{ toolbarBottom }}px;z-index:4;display:flex;flex-direction:column;gap:2px;background:#fff;border-radius:14px;padding:5px;box-shadow:0 6px 18px rgba(20,30,18,.14);transition:{{ toolbarTransition }}">
-        <div onClick="{{ openArea }}" style="width:36px;height:36px;border-radius:10px;background:#eaf0e8;display:flex;align-items:center;justify-content:center;cursor:pointer"><span style="width:12px;height:12px;border:2px solid #4f7a52;transform:rotate(45deg)"></span></div>
-        <div onClick="{{ openArea }}" style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer"><span style="width:11px;height:11px;border-radius:50%;background:#8a8d84"></span></div>
-        <div onClick="{{ openArea }}" style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#8a8d84;font-size:15px">▢</div>
+        <div onClick="{{ pickDraw }}" role="button" tabindex="0" aria-label="{{ areaL.draw }}" title="{{ areaL.draw }}" style="width:36px;height:36px;border-radius:10px;background:#eaf0e8;display:flex;align-items:center;justify-content:center;cursor:pointer"><span style="width:12px;height:12px;border:2px solid #4f7a52;transform:rotate(45deg)"></span></div>
+        <div onClick="{{ pickPin }}" role="button" tabindex="0" aria-label="{{ areaL.pin }}" title="{{ areaL.pin }}" style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer"><span style="width:11px;height:11px;border-radius:50%;background:#8a8d84"></span></div>
+        <div onClick="{{ pickRect }}" role="button" tabindex="0" aria-label="{{ uiRectSub }}" title="{{ uiRectSub }}" style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#8a8d84;font-size:15px">▢</div>
       </div>
 
       <!-- BOTTOM SHEET -->
@@ -252,12 +252,6 @@
           <div style="width:40px;height:4px;border-radius:2px;background:#d5d2c9;margin:6px auto 14px"></div>
           <div style="padding:0 22px 4px;font:600 18px 'Hanken Grotesk';color:#20241f">{{ areaL.chooseArea }}</div>
           <div style="padding:8px 14px 0;display:flex;flex-direction:column;gap:8px">
-            <!-- recommended first: snapshot what's on screen -->
-            <div onClick="{{ useScreen }}" style="display:flex;align-items:center;gap:13px;background:{{ areaFill }};border:1.5px solid {{ accent }};border-radius:15px;padding:13px 14px;cursor:pointer">
-              <span style="width:38px;height:38px;border-radius:11px;background:#fff;flex:none;display:flex;align-items:center;justify-content:center"><span style="width:20px;height:14px;border:2px solid {{ accent }};border-radius:3px"></span></span>
-              <div style="flex:1;min-width:0"><div style="font:600 14.5px 'Hanken Grotesk';color:#2f4d31">{{ uiScreenArea }}</div><div style="font:400 12px 'Hanken Grotesk';color:#6b7a63;margin-top:1px">{{ uiScreenAreaSub }}</div></div>
-              <span style="color:{{ accent }};font-size:20px;flex:none;line-height:1">›</span>
-            </div>
             <div onClick="{{ pickRect }}" style="display:flex;align-items:center;gap:13px;background:#fff;border:1px solid rgba(32,36,31,.1);border-radius:15px;padding:13px 14px;cursor:pointer">
               <span style="width:38px;height:38px;border-radius:11px;background:#f1f0ea;flex:none;display:flex;align-items:center;justify-content:center"><span style="width:19px;height:14px;border:2px solid #6b6f65;border-radius:2px"></span></span>
               <div style="flex:1;min-width:0"><div style="font:600 14.5px 'Hanken Grotesk';color:#20241f">{{ areaL.rect }}</div><div style="font:400 12px 'Hanken Grotesk';color:#8a8d84;margin-top:1px">{{ uiRectSub }}</div></div>
@@ -359,7 +353,10 @@
             <span style="background:{{ detail.evBg }};border:1px solid rgba(32,36,31,.08);border-radius:999px;padding:5px 11px;font:600 11.5px 'Hanken Grotesk';color:{{ detail.evFg }}">{{ detail.evLabel }}</span>
           </div>
           <p style="margin:13px 0 0;font:400 13.5px/1.6 'Hanken Grotesk';color:#5c5f57">{{ detail.desc }}</p>
-          <sc-if value="{{ detail.hasWiki }}" hint-placeholder-val="{{ false }}"><a href="{{ detail.wikiUrl }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;margin-top:11px;font:600 12.5px 'Hanken Grotesk';color:{{ accent }};text-decoration:none">{{ L.readWiki }} ↗</a></sc-if>
+          <div style="margin-top:11px;display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+            <sc-if value="{{ detail.descTruncated }}" hint-placeholder-val="{{ false }}"><span onClick="{{ toggleDesc }}" role="button" tabindex="0" style="font:600 12.5px 'Hanken Grotesk';color:#42463f;cursor:pointer;text-decoration:underline">{{ uiShowMore }}</span></sc-if>
+            <sc-if value="{{ detail.hasWiki }}" hint-placeholder-val="{{ false }}"><a href="{{ detail.wikiUrl }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font:600 12.5px 'Hanken Grotesk';color:{{ accent }};text-decoration:none">{{ L.readWiki }} ↗</a></sc-if>
+          </div>
           <sc-if value="{{ detail.hasPhotoAttr }}" hint-placeholder-val="{{ false }}"><div style="margin:9px 0 0;font:400 10px/1.4 'Hanken Grotesk';color:#a8a59c">◈ {{ detail.photoAttr }}</div></sc-if>
         </div>
 
@@ -367,7 +364,7 @@
         <div style="margin:0 22px;padding:12px 14px;background:#eef2ec;border-radius:14px;font:500 12.5px/1.5 'Hanken Grotesk';color:#3f5a41">{{ L.showingFor }} <b>{{ detailContext }}</b></div>
 
         <!-- distribution: real map with live iNaturalist observation points -->
-        <div style="margin:16px 22px 0;height:150px;border-radius:16px;position:relative;overflow:hidden;border:1px solid rgba(32,36,31,.08);background:#eef1ea">
+        <div style="margin:16px 22px 0;height:150px;border-radius:16px;position:relative;overflow:hidden;isolation:isolate;z-index:0;border:1px solid rgba(32,36,31,.08);background:#eef1ea">
           <sc-if value="{{ detail.hasObsMap }}" hint-placeholder-val="{{ true }}">
             <div id="se-obsmap" style="position:absolute;inset:0"></div>
           </sc-if>
@@ -536,7 +533,7 @@ class Component extends DCLogic {
     timeSet:false, timeLabel:'', timeCustom:null, customHourFrom:18, customHourTo:22,
     mode:'expert', showStartup:true, startupSkip:false, settingsOpen:false, accentColor:null, lang:'en', langMenu:false,
     drawing:false, drawMode:null, drawPts:[], placeResults:[], placeSearching:false, pinRadiusKm:5,
-    taxaResults:[], taxaSearching:false, favs:{}, sortBy:'count', netQ:null, netMs:0, locating:false,
+    taxaResults:[], taxaSearching:false, favs:{}, sortBy:'count', netQ:null, netMs:0, locating:false, descExpanded:false,
   };
   ACCENTS = [{c:'#4f7a52',name:'Forest'},{c:'#3f6a86',name:'Ocean'},{c:'#b06a3c',name:'Clay'}];
   LANGS = [
@@ -637,8 +634,8 @@ class Component extends DCLogic {
     ar:{chooseArea:'اختر منطقة',draw:'ارسم',pin:'نقطة + نطاق',saved:'المناطق المحفوظة',anywhere:'أي مكان'},
   };
   UX = {
-    en:{nearMe:'Near me',back:'Back',fav:'Save',settings:'Settings',close:'Close',sheet:'Drag to resize the list'},
-    it:{nearMe:'Vicino a me',back:'Indietro',fav:'Salva',settings:'Impostazioni',close:'Chiudi',sheet:'Trascina per ridimensionare la lista'},
+    en:{nearMe:'Near me',back:'Back',fav:'Save',settings:'Settings',close:'Close',sheet:'Drag to resize the list',showMore:'Show more'},
+    it:{nearMe:'Vicino a me',back:'Indietro',fav:'Salva',settings:'Impostazioni',close:'Chiudi',sheet:'Trascina per ridimensionare la lista',showMore:'Mostra tutto'},
     es:{nearMe:'Cerca de mí',back:'Atrás',fav:'Guardar',settings:'Ajustes',close:'Cerrar'},
     fr:{nearMe:'Près de moi',back:'Retour',fav:'Enregistrer',settings:'Réglages',close:'Fermer'},
     de:{nearMe:'In meiner Nähe',back:'Zurück',fav:'Speichern',settings:'Einstellungen',close:'Schließen'},
@@ -690,7 +687,6 @@ class Component extends DCLogic {
 
   TAXA = [['all','Any group'],['amph','Amphibians'],['bird','Birds'],['mamm','Mammals'],['rept','Reptiles'],['ins','Insects'],['arac','Arachnids'],['fish','Fish'],['plant','Plants'],['other','Other']];
   MONTHS = ['J','F','M','A','M','J','J','A','S','O','N','D'];
-  WHENP = ['This week','This month','Spring','Summer'];
   MONTHNAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   TIMEOPTS = ['Dawn','Morning','Daytime','Dusk','Twilight','Night'];
 
@@ -842,12 +838,12 @@ class Component extends DCLogic {
     navigator.geolocation.getCurrentPosition(
       pos => {
         const lat = pos.coords.latitude, lng = pos.coords.longitude;
-        this._lastView = { center:[lat,lng], zoom:13 };
-        if(this._map){ try{ this._map.setView([lat,lng], 13, { animate:true }); }catch(e){} }
-        const r = this.state.pinRadiusKm || 5;
-        const dLat = r/111, dLng = r/(111*Math.cos(lat*Math.PI/180));
-        const bbox = { swlat:lat-dLat, nelat:lat+dLat, swlng:lng-dLng, nelng:lng+dLng };
-        this.set({ locating:false, areaSet:true, areaName:this.ux('nearMe'), areaShort:this.ux('nearMe'), bbox, areaKind:'pin', pinCenter:[lat,lng], pinRadiusKm:r, areaGeom:null, overlay:null });
+        this._lastView = { center:[lat,lng], zoom:12 };
+        if(this._map){ try{ this._map.setView([lat,lng], 12, { animate:true }); }catch(e){} }
+        // drop into pin mode centred on the user so they can dial in the radius, then confirm
+        this.set({ locating:false, overlay:null, drawing:true, drawMode:'pin', pinCenter:[lat,lng], pinRadiusKm:this.state.pinRadiusKm||5, sheetH:this.SHEET_MIN, areaSet:false, areaName:'', areaShort:'', areaKind:null, areaGeom:null });
+        this.setDrawInteractions(true);
+        setTimeout(()=>this.updatePinPreview(), 60);
       },
       () => this.set({ locating:false }),
       { enableHighAccuracy:true, timeout:10000, maximumAge:60000 }
@@ -933,13 +929,18 @@ class Component extends DCLogic {
     if(!force && sig===this._areaSig) return;
     this._areaSig=sig;
     const A = this.accentColorNow(), st = this.state;
+    // Use a dedicated SVG renderer for the area overlay: the map's default canvas renderer (preferCanvas)
+    // doesn't repaint a freshly-added polygon until the next map move, which is why a searched place's
+    // boundary only appeared after panning. SVG paints it immediately.
+    if(!this._svgRenderer){ this._svgRenderer = L.svg(); }
+    const rOpt = this._svgRenderer;
     if(this._areaLayer){ this._map.removeLayer(this._areaLayer); this._areaLayer=null; }
     if(st.areaGeom){
       // real boundary (a place) drawn solid; a hand-drawn area drawn dashed
       const solid = st.areaKind==='place';
-      this._areaLayer = L.polygon(st.areaGeom.map(p => [p[1], p[0]]), { color:A, weight:2, dashArray: solid?null:'6 4', fillColor:A, fillOpacity:0.13 }).addTo(this._map);
+      this._areaLayer = L.polygon(st.areaGeom.map(p => [p[1], p[0]]), { renderer:rOpt, color:A, weight:2, dashArray: solid?null:'6 4', fillColor:A, fillOpacity:0.13 }).addTo(this._map);
     } else if(st.areaKind==='pin' && st.pinCenter){
-      this._areaLayer = L.circle([st.pinCenter[0], st.pinCenter[1]], { radius:(st.pinRadiusKm||5)*1000, color:A, weight:2, fillColor:A, fillOpacity:0.13 }).addTo(this._map);
+      this._areaLayer = L.circle([st.pinCenter[0], st.pinCenter[1]], { renderer:rOpt, radius:(st.pinRadiusKm||5)*1000, color:A, weight:2, fillColor:A, fillOpacity:0.13 }).addTo(this._map);
     }
     // a place with no boundary available → draw nothing (no fake rectangle)
   }
@@ -1082,9 +1083,9 @@ class Component extends DCLogic {
       else { this._map.dragging.enable(); this._map.doubleClickZoom.enable(); if(this._mapEl) this._mapEl.style.touchAction=''; }
     }catch(e){}
   }
-  startPin(){ this.clearDrawLayer(); this.set({ overlay:null, drawing:true, drawMode:'pin', drawPts:[], pinCenter:null, sheetH:this.SHEET_MIN }); this.setDrawInteractions(true); }
-  startRect(){ this.clearDrawLayer(); this.set({ overlay:null, drawing:true, drawMode:'rect', drawPts:[], sheetH:this.SHEET_MIN }); this.setDrawInteractions(true); }
-  startDraw(){ this.clearDrawLayer(); this.set({ overlay:null, drawing:true, drawMode:'draw', drawPts:[], sheetH:this.SHEET_MIN }); this.setDrawInteractions(true); }
+  startPin(){ this.clearDrawLayer(); this.set({ overlay:null, drawing:true, drawMode:'pin', drawPts:[], pinCenter:null, sheetH:this.SHEET_MIN, areaSet:false, areaName:'', areaShort:'', areaKind:null, areaGeom:null }); this.setDrawInteractions(true); }
+  startRect(){ this.clearDrawLayer(); this.set({ overlay:null, drawing:true, drawMode:'rect', drawPts:[], pinCenter:null, sheetH:this.SHEET_MIN, areaSet:false, areaName:'', areaShort:'', areaKind:null, areaGeom:null }); this.setDrawInteractions(true); }
+  startDraw(){ this.clearDrawLayer(); this.set({ overlay:null, drawing:true, drawMode:'draw', drawPts:[], pinCenter:null, sheetH:this.SHEET_MIN, areaSet:false, areaName:'', areaShort:'', areaKind:null, areaGeom:null }); this.setDrawInteractions(true); }
   finishRect(pts){
     const lats=[pts[0][1],pts[1][1]], lngs=[pts[0][0],pts[1][0]];
     const bbox={swlat:Math.min(...lats),nelat:Math.max(...lats),swlng:Math.min(...lngs),nelng:Math.max(...lngs)};
@@ -1112,13 +1113,6 @@ class Component extends DCLogic {
     this.clearDrawLayer(); this.setDrawInteractions(false);
   }
   cancelDraw(){ this.clearDrawLayer(); this.set({ drawing:false, drawMode:null, drawPts:[] }); this.setDrawInteractions(false); }
-  useScreenArea(){
-    const m = this._map; if(!m){ this.set({overlay:null}); return; }
-    const b = m.getBounds();
-    const bbox = { swlat:b.getSouth(), nelat:b.getNorth(), swlng:b.getWest(), nelng:b.getEast() };
-    // one-shot snapshot of what's currently visible; results won't follow later pan/zoom until re-picked
-    this.set({ areaSet:true, areaName:this.t('screenArea'), areaShort:this.t('screenArea'), bbox, areaKind:'screen', areaGeom:null, pinCenter:null, overlay:null });
-  }
   undoDrawPt(){ const pts = this.state.drawPts.slice(0,-1); this.set({ drawPts:pts }); this.updateDrawLayer(pts); }
   persist(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
   chooseMode(m){ this.persist('se_mode',m); if(this.state.startupSkip) this.persist('se_skip','1'); this.set({mode:m, showStartup:false}); }
@@ -1186,7 +1180,16 @@ class Component extends DCLogic {
   }
   cap(s){ s = (s||'').trim(); return s ? s[0].toUpperCase()+s.slice(1) : ''; }
   fmt(n){ return (n||0).toLocaleString('en-US'); }
-  stripHtml(s){ const t = (s||'').replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim(); return t.length>230 ? t.slice(0,227)+'…' : t; }
+  stripHtml(s){ return (s||'').replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim(); }
+  // trim to the end of the first sentence past `min` chars (falling back to a word boundary) so the
+  // description is never cut mid-word; the UI offers “show more” to reveal the rest.
+  truncateSentence(t, min){
+    t = t||''; if(t.length <= min+60) return { text:t, truncated:false };
+    let cut = t.indexOf('. ', min);
+    if(cut<0 || cut>min+240) cut = t.indexOf(' ', min);
+    if(cut<0) cut = min;
+    return { text: t.slice(0, cut+1).trim(), truncated:true };
+  }
   bboxParams(p, b){ if(b){ p.set('nelat',b.nelat); p.set('nelng',b.nelng); p.set('swlat',b.swlat); p.set('swlng',b.swlng); } }
   HOURS = { Dawn:[5,6,7], Morning:[7,8,9,10,11], Daytime:[9,10,11,12,13,14,15,16,17], Dusk:[17,18,19,20], Twilight:[5,6,7,18,19,20], Night:[21,22,23,0,1,2,3,4] };
   // inclusive hour list from a→b, wrapping past midnight (e.g. 21→4 = 21,22,23,0,1,2,3,4)
@@ -1265,7 +1268,7 @@ class Component extends DCLogic {
   }
 
   openSpecies(s){
-    this.set({ view:'detail', openSpecies:{...s, sources:null}, selId:s.id, overlay:null, speciesQ:'' });
+    this.set({ view:'detail', openSpecies:{...s, sources:null}, selId:s.id, overlay:null, speciesQ:'', descExpanded:false });
     // species description + Wikipedia link + global count are cheap and useful — fetch in both modes
     this.fetchTaxonInfo(s);
     // Simple mode hides the activity chart and sources panel — don't spend bandwidth fetching them.
@@ -1502,8 +1505,11 @@ class Component extends DCLogic {
     const isExpected = src ? (src.combined === 0) : (sel && sel.evidence === 'expected');
     const favKey = sel ? String(sel.taxonId||sel.id) : '';
     const isFav = !!(st.favs && st.favs[favKey]);
+    const dtr = this.truncateSentence(sel ? (sel.desc||'') : '', 220);
+    const descShown = (st.descExpanded || !dtr.truncated) ? (sel ? (sel.desc||'') : '') : dtr.text;
     const detail = !sel ? {} : {
       ...sel, areaShort,
+      desc: descShown, descTruncated: dtr.truncated && !st.descExpanded,
       taxon: this.t('g_'+(sel.tk||'other')),
       status: sel.status ? sel.status : this.t('notEvaluated'),
       inat: this.fmt(src ? src.inat : (sel.inat||0)),
@@ -1605,7 +1611,6 @@ class Component extends DCLogic {
       sheetDragStart: (e) => this.sheetDragStart(e),
       areaSet: st.areaSet,
       whenSet: st.whenSet, timeSet: st.timeSet,
-      areaFill: this.hexA(A,0.16),
       subjChip, subjSet,
       subjChipBg: subjSet?filledBg:emptyBg, subjChipFg: subjSet?filledFg:emptyFg, subjChipBc: subjSet?filledBc:emptyBc,
       // facet chips
@@ -1646,6 +1651,8 @@ class Component extends DCLogic {
       showGroupToggle,
       groupToggleLabel: st.groupsExpanded ? (this.t('less')+' ▴') : (this.t('more')+' ▾'),
       toggleGroups: () => this.set({groupsExpanded: !st.groupsExpanded}),
+      toggleDesc: () => this.set({descExpanded:true}),
+      uiShowMore: this.ux('showMore'),
       monthLabels: this.MONTHNAMES.map((m,i) => ({t: this.intlMonth(i,'narrow')})),
       L: this.langTable(st.lang),
       areaL: { ...(this.ATR[st.lang] || this.ATR.en), rect: (this.RECTL[st.lang] || this.RECTL.en) },
@@ -1671,7 +1678,7 @@ class Component extends DCLogic {
       clearPlaceBox: () => this.set({placeQ:'', placeResults:[], placeSearching:false}),
       uiCancel: this.t('cancel'), uiSecSpecies: this.t('sec_species'), uiSecPlaces: this.t('sec_places'),
       uiNoPlaces: this.t('noPlaces'), uiSearching: this.t('searching'), uiSpeciesPh: this.t('searchSpeciesPh'), uiPlacePh: this.t('searchPlacePh'),
-      uiScreenArea: this.t('screenArea'), uiScreenAreaSub: this.t('screenAreaSub'), uiNoObsMap: this.t('noObsMap'), uiObservations: this.t('observations'),
+      uiNoObsMap: this.t('noObsMap'), uiObservations: this.t('observations'),
       uiRectSub: this.t('rectSub'), uiPinSub: this.t('pinSub'), uiDrawSub: this.t('drawSub'), uiAnywhereSub: this.t('anywhereSub'),
       photoZoomOpen: !!st.photoZoom, photoZoomUrl: st.photoZoom || '',
       photoZoomHasAttr: !!st.photoZoomAttr, photoZoomAttr: st.photoZoomAttr || '',
@@ -1704,7 +1711,7 @@ class Component extends DCLogic {
       onPlaceInput: e => { const v = e.target.value; this.set({placeQ: v, searchMode:'place'}); this.queuePlaceSearch(v); },
       focusSpecies: () => this.set({searchMode:'species'}),
       focusPlace: () => this.set({searchMode:'place'}),
-      clearArea: e => { this.stop(e); this.set({areaSet:false}); },
+      clearArea: e => { this.stop(e); this.set({areaSet:false, areaName:'', areaShort:'', areaKind:null, areaGeom:null, pinCenter:null, bbox:null}); },
       clearWhen: e => { this.stop(e); this.set({whenSet:false}); },
       clearTime: e => { this.stop(e); this.set({timeSet:false}); },
       clearWhenClose: () => this.set({whenSet:false, overlay:null}),
@@ -1712,7 +1719,6 @@ class Component extends DCLogic {
       pickDraw: () => this.startDraw(),
       pickPin: () => this.startPin(),
       pickRect: () => this.startRect(),
-      useScreen: () => this.useScreenArea(),
       pickAnywhere: () => this.set({areaSet:true, areaName:this.t('anyArea'), areaShort:this.t('anyArea'), bbox:null, areaGeom:null, areaKind:'anywhere', pinCenter:null, overlay:null}),
       openSubject: () => this.set({overlay:'search'}),
       clearSubject: e => { this.stop(e); this.set({subjectType:null, subjectGroup:null}); },
