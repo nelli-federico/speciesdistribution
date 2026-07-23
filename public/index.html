@@ -39,6 +39,31 @@
 
 <div id="se-root" style="width:100vw;height:100dvh;background:#f7f6f2;overflow:hidden;position:relative;display:flex;flex-direction:column" dir="{{ dir }}">
 
+    <!-- ================= ERROR BOUNDARY =================
+         Shown instead of the app when renderVals() throws. sc-if is lazy
+         (walkIf only builds children when the value is truthy), so when
+         __ok is false NOTHING below is evaluated: no cascade of undefined. -->
+    <sc-if value="{{ __crash }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:9000;background:#f7f6f2;display:flex;align-items:center;justify-content:center;padding:22px;overflow:auto">
+      <div style="width:100%;max-width:420px;background:#fff;border:1px solid #e2e0d8;border-radius:16px;padding:20px 18px;box-shadow:0 8px 30px rgba(0,0,0,.08)">
+        <div style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;color:#b0432f">⚠ ERROR</div>
+        <div style="font:500 20px 'Newsreader',serif;color:#2c2f2a;margin:8px 0 6px">{{ crashTitle }}</div>
+        <div style="font:400 13.5px 'Hanken Grotesk',sans-serif;color:#5c5f57;line-height:1.45">{{ crashHint }}</div>
+        <div style="margin-top:14px;background:#f3f2ec;border:1px solid #e2e0d8;border-radius:10px;padding:10px 12px;max-height:180px;overflow:auto">
+          <div style="font:500 11.5px 'IBM Plex Mono',monospace;color:#8a5f1e;word-break:break-word;white-space:pre-wrap">{{ crashMsg }}</div>
+          <sc-if value="{{ crashStack }}" hint-placeholder-val="{{ false }}"><div style="margin-top:8px;font:400 10.5px 'IBM Plex Mono',monospace;color:#8a8d84;word-break:break-word;white-space:pre-wrap">{{ crashStack }}</div></sc-if>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
+          <div onClick="{{ crashReload }}" style="flex:1 1 130px;text-align:center;cursor:pointer;background:#4f7a52;color:#fff;border-radius:10px;padding:11px 14px;font:600 13px 'Hanken Grotesk',sans-serif">{{ crashReloadLabel }}</div>
+          <div onClick="{{ crashCopy }}" style="flex:0 1 auto;text-align:center;cursor:pointer;background:#fff;color:#5c5f57;border:1px solid #d9d7cd;border-radius:10px;padding:11px 14px;font:600 13px 'Hanken Grotesk',sans-serif">{{ crashCopyLabel }}</div>
+        </div>
+        <div onClick="{{ crashReset }}" style="margin-top:12px;text-align:center;cursor:pointer;color:#a8a59c;font:500 12px 'Hanken Grotesk',sans-serif;text-decoration:underline">{{ crashResetLabel }}</div>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ __ok }}" hint-placeholder-val="{{ true }}">
+
     <!-- ================= HOME ================= -->
     <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
     <div style="position:absolute;inset:0;display:flex;flex-direction:column">
@@ -521,6 +546,8 @@
     </div>
     </sc-if>
 
+    </sc-if><!-- /__ok -->
+
   </div>
 
 </x-dc>
@@ -774,6 +801,16 @@ class Component extends DCLogic {
   // ---- live data lifecycle ----
   componentDidMount(){
     this._lk = null;
+
+    // Async failures (fetch chains, Leaflet callbacks) never reach the render
+    // boundary. Log them only — they are usually recoverable (an aborted tile
+    // request must not throw a fatal card in the user's face).
+    this._onWinErr = (ev) => { this.logError('window.error', (ev && ev.error) || (ev && ev.message) || ev); };
+    this._onRej    = (ev) => { this.logError('unhandledrejection', (ev && ev.reason) || ev); };
+    window.addEventListener('error', this._onWinErr);
+    window.addEventListener('unhandledrejection', this._onRej);
+    // read the last 10 errors from the phone: seErrLog() in the console
+    window.seErrLog = () => { try{ return JSON.parse(localStorage.getItem('se_errlog') || '[]'); }catch(e){ return []; } };
     try{
       const skip = localStorage.getItem('se_skip')==='1';
       const savedMode = localStorage.getItem('se_mode');
@@ -816,6 +853,8 @@ class Component extends DCLogic {
     window.addEventListener('offline', this._onNet);
   }
   componentWillUnmount(){
+    if(this._onWinErr){ window.removeEventListener('error', this._onWinErr); this._onWinErr=null; }
+    if(this._onRej){ window.removeEventListener('unhandledrejection', this._onRej); this._onRej=null; }
     if(this._onNet){ window.removeEventListener('online', this._onNet); window.removeEventListener('offline', this._onNet); }
     if(this._onResize){ window.removeEventListener('resize', this._onResize); }
     if(this._onKey){ window.removeEventListener('keydown', this._onKey); }
@@ -1150,7 +1189,14 @@ class Component extends DCLogic {
   setMode(m){ this.persist('se_mode',m); this.set({mode:m}); }
   setAccent(c){ this.persist('se_accent',c); this.set({accentColor:c}); }
   setLang(code){ this.persist('se_lang',code); this.set({lang:code, langMenu:false}); }
+  // Effects here run outside render, so a throw would escape the React boundary
+  // entirely and leave the app in a half-updated state. Log it, keep going.
   componentDidUpdate(){
+    try{ this.componentDidUpdateInner(); }
+    catch(e){ this.logError('componentDidUpdate', e); }
+  }
+
+  componentDidUpdateInner(){
     this.maybeRefresh();
     this.maybeGroupCounts();
     this.syncObsMap();
@@ -1402,7 +1448,88 @@ class Component extends DCLogic {
     document.addEventListener('pointercancel', up);
   }
 
+  // ================= ERROR BOUNDARY =================
+  // support.js already has a React boundary, but its fallback is the editor
+  // placeholder (blank screen + red bar) and, worse, when renderVals() throws it
+  // still renders the template with props only -> every {{ }} is undefined and the
+  // template throws too. So the real boundary lives here, above renderVals.
+  // Deliberately NOT localised: i18n is itself a plausible crash source, so the
+  // recovery screen must not depend on it.
+  CRASH_TEXT = {
+    title: 'Something went wrong',
+    hint : 'The app hit an unexpected error while drawing this screen. Your settings and favourites are safe. Reload to continue — and send the error text if it keeps happening.',
+    reload: 'Reload',
+    copy  : 'Copy error',
+    reset : 'Reset app data and reload',
+  };
+
+  // Append to a capped ring buffer in localStorage so errors survive a reload and
+  // can be read back from the phone (window.seErrLog() in the console, or the card).
+  logError(where, err){
+    const rec = {
+      t    : new Date().toISOString(),
+      where: where,
+      msg  : (err && err.message) ? String(err.message) : String(err),
+      stack: (err && err.stack) ? String(err.stack).split('\n').slice(1, 5).join('\n') : '',
+      ua   : (navigator && navigator.userAgent) || '',
+      url  : location.href,
+      build: document.title,
+    };
+    try{ console.error('[SE ' + where + ']', err); }catch(e){}
+    try{
+      const log = JSON.parse(localStorage.getItem('se_errlog') || '[]');
+      log.unshift(rec);
+      localStorage.setItem('se_errlog', JSON.stringify(log.slice(0, 10)));
+    }catch(e){}
+    return rec;
+  }
+
+  crashVals(rec){
+    const T = this.CRASH_TEXT;
+    return {
+      dir: this._lastDir || 'ltr',
+      __ok: false,
+      __crash: true,
+      crashTitle: T.title,
+      crashHint : T.hint,
+      crashMsg  : rec.where + ': ' + rec.msg,
+      crashStack: rec.stack || '',
+      crashReloadLabel: T.reload,
+      crashCopyLabel  : T.copy,
+      crashResetLabel : T.reset,
+      crashReload: () => { try{ location.reload(); }catch(e){} },
+      crashCopy: () => {
+        const txt = JSON.stringify(rec, null, 2);
+        try{
+          if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(txt); return; }
+          const ta = document.createElement('textarea');
+          ta.value = txt; ta.style.position='fixed'; ta.style.opacity='0';
+          document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
+        }catch(e){ console.log(txt); }
+      },
+      // last resort: a corrupt persisted value (bad se_favs JSON, stale hash) can
+      // crash every render, so give the user a way out that survives reloads
+      crashReset: () => {
+        try{ ['se_mode','se_accent','se_lang','se_favs','se_skip'].forEach(k => localStorage.removeItem(k)); }catch(e){}
+        try{ history.replaceState(null, '', location.pathname + location.search); }catch(e){}
+        try{ location.reload(); }catch(e){}
+      },
+    };
+  }
+
+  // NOTE: no setState here — renderVals must stay side-effect free (see README §2).
   renderVals(){
+    let vals;
+    try{
+      vals = this.renderValsInner();
+    }catch(e){
+      return this.crashVals(this.logError('renderVals', e));
+    }
+    this._lastDir = (vals && vals.dir) || this._lastDir;
+    return { ...vals, __ok:true, __crash:false };
+  }
+
+  renderValsInner(){
     const A = this.state.accentColor || this.props.accent || '#4f7a52';
     const showInat = this.props.showInat !== false;
     const st = this.state;
